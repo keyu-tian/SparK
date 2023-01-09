@@ -1,0 +1,7 @@
+*.swp
+**/__pycache__/**
+.idea/*
+ckpt/
+*.pth
+*.log
+*.txt
