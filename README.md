@@ -1,4 +1,4 @@
-## SparK🔥 (Sparse and Hierarchical Masked Modeling): A PyTorch Implementation [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
+## The Official PyTorch Implementation of SparK🔥 (Sparse and Hierarchical Masked Modeling) [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/39692511/211496814-e6cb9243-833c-43d2-a859-d35afa96ed22.png" width=86% class="center">
