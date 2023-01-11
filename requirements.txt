@@ -1,0 +1,8 @@
+blobfile
+easydict
+einops
+numpy
+objprint
+Pillow
+requests
+typed-argument-parser

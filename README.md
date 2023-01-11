@@ -16,8 +16,8 @@
 ## Introduction
 
 This is an official implementation of the paper: "Designing BERT for Convolutional Networks: Sparse and Hierarchical Masked Modeling".
-We'll be updating frequently these days, so you might consider star ⭐ or watch 👓 this repository to get the latest information!
-Updates including downstream implementations, Colab tutorial, inference and visualization code will come soon.
+We'll be updating frequently these days, so you might consider star ⭐ or watch 👓 this repo to get the latest information.
+Updates including downstream implementations, Colab tutorial, inference and visualization codes will come soon!
 
 In this work we designed a BERT-style pre-training framework (a.k.a. masked image modeling) for any hierarchical (multi-scale) convnets.
 As shown above, it gathers all unmasked patches to form a sparse image and uses sparse convolution for encoding.
