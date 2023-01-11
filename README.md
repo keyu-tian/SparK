@@ -1,6 +1,6 @@
 # SparK✨: the first successful BERT-style pre-training on any convolutional networks [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
 
-This is an official implementation of the paper "Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling".
+This is an official implementation of the paper "Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling". (submitted to [openreview ICLR'23](https://openreview.net/forum?id=NRxydtWup1S) in Oct. 2021)
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/39692511/211496814-e6cb9243-833c-43d2-a859-d35afa96ed22.png" width=86% class="center">
