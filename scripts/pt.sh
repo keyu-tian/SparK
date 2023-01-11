@@ -23,17 +23,13 @@ function mkd() {
 
 
 EXP_NAME=$1
-DATA_PATH=$2
 
 EXP_DIR="${SPARK_DIR}/output_${EXP_NAME}"
-mkd "${EXP_DIR}"
 
 
 print "===================== Args ====================="
 print "EXP_NAME: ${EXP_NAME}"
-print "DATA_PATH: ${DATA_PATH}"
-print "EXP_DIR: ${EXP_DIR}"
-print "[other_args sent to launch.py]: ${*:3}"
+print "[other_args sent to launch.py]: ${*:2}"
 print "================================================"
 print ""
 
@@ -43,7 +39,6 @@ to_spark_dir
 python launch.py \
 --main_py_relpath main.py \
 --exp_name "${EXP_NAME}" \
---data_path "${DATA_PATH}" \
 --exp_dir "${EXP_DIR}" \
-"${*:3}"
+"${*:2}"
 print "============== Pretraining ends =============="

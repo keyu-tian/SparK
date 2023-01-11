@@ -121,6 +121,8 @@ def init_dist_and_get_args():
 
     # initialize
     args = Args(explicit_bool=True).parse_args()
+    args.exp_dir = ''.join(ch if ch.isalnum() else '_' for ch in args.exp_dir)
+    os.makedirs(args.exp_dir)
     misc.init_distributed_environ(exp_dir=args.exp_dir)
     
     # update args

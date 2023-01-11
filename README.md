@@ -1,4 +1,4 @@
-## The Official PyTorch Implementation of SparK🔥 (Sparse and Hierarchical Masked Modeling) [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
+## SparK🔥: "Designing BERT for Convolutional Networks: Sparse and Hierarchical Masked Modeling" [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/39692511/211496814-e6cb9243-833c-43d2-a859-d35afa96ed22.png" width=86% class="center">
@@ -16,7 +16,8 @@
 ## Introduction
 
 This is an official implementation of the paper: "Designing BERT for Convolutional Networks: Sparse and Hierarchical Masked Modeling".
-We'll be updating frequently these days, so you might consider star ⭐ or watch 👓 this repository to get the latest information.
+We'll be updating frequently these days, so you might consider star ⭐ or watch 👓 this repository to get the latest information!
+Updates including downstream implementations, Colab tutorial, inference and visualization code will come soon.
 
 In this work we designed a BERT-style pre-training framework (a.k.a. masked image modeling) for any hierarchical (multi-scale) convnets.
 As shown above, it gathers all unmasked patches to form a sparse image and uses sparse convolution for encoding.
@@ -30,19 +31,19 @@ This method is general and powerful: it can be used directly on any convolutiona
 See our [paper](https://www.researchgate.net/profile/Keyu-Tian-2/publication/366984303_Designing_BERT_for_Convolutional_Networks_Sparse_and_Hierarchical_Masked_Modeling/links/63bcf24bc3c99660ebe253c5/Designing-BERT-for-Convolutional-Networks-Sparse-and-Hierarchical-Masked-Modeling.pdf) for more analysis, discussion, and evaluation.
 
 
-## Pre-train
+## Pre-training
 
 See [PRETRAIN.md](PRETRAIN.md) for preparation and pre-training.
 
-## Fine-tune on ImageNet
+## ImageNet Fine-tuning
 
-After finishing the preparation in [PRETRAIN.md](PRETRAIN.md), see [downstream_imagenet](downstream_imagenet) for subsequent instructions.
+After finishing the preparation in [PRETRAIN.md](PRETRAIN.md), check [downstream_imagenet](downstream_imagenet) for subsequent instructions.
 
-## Fine-tune ResNets on COCO
+## Fine-tuning ResNets on COCO
 
-Install `Detectron2` and see [downstream_d2](downstream_d2) for more details.
+Install `detectron2` and see [downstream_d2](downstream_d2) for more details.
 
-## Fine-tune ConvNeXts on COCO
+## Fine-tuning ConvNeXts on COCO
 
 Install `mmcv` and `mmdetection` then see [downstream_mmdet](downstream_mmdet) for more details.
 

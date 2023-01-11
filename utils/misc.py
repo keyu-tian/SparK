@@ -259,7 +259,7 @@ def _set_print_only_on_master_proc(is_master):
 class _SyncPrintToFile(object):
     def __init__(self, exp_dir, stdout=True):
         self.terminal = sys.stdout if stdout else sys.stderr
-        fname = os.path.join(exp_dir, 'stdout.txt' if stdout else 'stderr.txt')
+        fname = os.path.join(exp_dir, 'stdout_backup.txt' if stdout else 'stderr_backup.txt')
         self.log = open(fname, 'w')
         self.log.flush()
     
