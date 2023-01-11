@@ -1,4 +1,4 @@
-# SparK✨: the first successful BERT-style pre-training on any convolutional nets [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
+# SparK✨: the first successful BERT-style pre-training on any convolutional networks [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
 
 This is an official implementation of the paper "Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling".
 
@@ -23,7 +23,7 @@ This is an official implementation of the paper "Designing BERT for Convolutiona
 <img src="https://user-images.githubusercontent.com/39692511/211497479-0563e891-f2ad-4cf1-b682-a21c2be1442d.png" width=68%>
 <p>
 
-### 🔥 ConvNeXt gains more from BERT-style pre-training than Swin-Transformer, up to +3.5 points:
+### 🔥 ConvNeXt gains more from pre-training than Swin-Transformer, up to +3.5 points:
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/39692511/211497396-cd031318-ef54-45a4-a283-cd9810c15603.png" width=68%>
