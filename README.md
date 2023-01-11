@@ -1,4 +1,4 @@
-## SparK✨: the first successful BERT-style pre-training on any convolutional nets [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
+# SparK✨: the first successful BERT-style pre-training on any convolutional nets [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
 
 This is an official implementation of the paper "Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling".
 
@@ -55,7 +55,7 @@ This is an official implementation of the paper "Designing BERT for Convolutiona
 
 ## Install
 
-Check [INSTALL.md](INSTALL.md) to prepare dependencies. Our implementation is based on `torch==1.10.0+cu113`, `torchvision==0.11.1+cu113`, and `timm==0.5.4`. [This](https://github.com/facebookresearch/SparseConvNet) sparse convolution framework is an optional library.
+Check [INSTALL.md](INSTALL.md) to install all dependencies. Our implementation is based on `torch==1.10.0+cu113`, `torchvision==0.11.1+cu113`, and `timm==0.5.4`. [This](https://github.com/facebookresearch/SparseConvNet) sparse convolution framework is an optional library.
 
 ## Pre-training
 
