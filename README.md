@@ -7,7 +7,7 @@
 <div align="center">
 
   [[`arXiv`](https://arxiv.org/abs/2301.03580)]
-  [[`pdf`](https://www.researchgate.net/profile/Keyu-Tian-2/publication/366984303_Designing_BERT_for_Convolutional_Networks_Sparse_and_Hierarchical_Masked_Modeling/links/63bcf24bc3c99660ebe253c5/Designing-BERT-for-Convolutional-Networks-Sparse-and-Hierarchical-Masked-Modeling.pdf)]
+  [[`pdf`](https://arxiv.org/pdf/2301.03580.pdf)]
   [[`state-of-the-art self-supervised convnet`](https://paperswithcode.com/sota/self-supervised-image-classification-on-1?tag_filter=17?p=designing-bert-for-convolutional-networks)]
   [[`bibtex`](https://github.com/keyu-tian/SparK#citation)]
 </div>
@@ -28,7 +28,7 @@ This method is general and powerful: it can be used directly on any convolutiona
 <img src="https://user-images.githubusercontent.com/39692511/211497396-cd031318-ef54-45a4-a283-cd9810c15603.png" width=45%><img src="https://user-images.githubusercontent.com/39692511/211497479-0563e891-f2ad-4cf1-b682-a21c2be1442d.png" width=55%>
 
 
-See our [paper](https://www.researchgate.net/profile/Keyu-Tian-2/publication/366984303_Designing_BERT_for_Convolutional_Networks_Sparse_and_Hierarchical_Masked_Modeling/links/63bcf24bc3c99660ebe253c5/Designing-BERT-for-Convolutional-Networks-Sparse-and-Hierarchical-Masked-Modeling.pdf) for more analysis, discussion, and evaluation.
+See our [paper](https://arxiv.org/pdf/2301.03580.pdf) for more analysis, discussion, and evaluation.
 
 
 ## Pre-training
