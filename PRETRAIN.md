@@ -44,10 +44,9 @@ $ python3 setup.py develop --user
 ```
 
 
-> `Tips:` In our default implementation, masked convolution (defined in [encoder.py](https://github.com/keyu-tian/SparK/blob/main/encoder.py)) is used to simulate the submanifold sparse convolution for speed.
-It has equivalent computational results to sparse convolution.
-If you would like to use the *true* sparse convolution installed above, please pass `--sparse_conv=1` to the training script.
-
+> `Tips:` In our default implementation, we use pytorch builtin operators to simulate the submanifold sparse convolution in [encoder.py](https://github.com/keyu-tian/SparK/blob/main/encoder.py) for generality,
+due to the fact that many convolution operators (e.g., grouped conv and dilated conv) do not yet have efficient sparse implementations on today's hardware.
+If you would like to use the *true* sparse convolution installed above, please pass `--sparse_conv=1` to the training script, but it would be much slower.
 
 
 ## Pre-training from scratch
@@ -103,10 +102,10 @@ To resume from a saved checkpoint, run `pt.sh` with `--resume=/path/to/checkpoin
 
 ## Regarding sparse convolution
 
-For speed, we use the masked convolution implemented in [encoder.py](https://github.com/keyu-tian/SparK/blob/main/encoder.py) to simulate submanifold sparse convolution by default.
+For generality, we use the masked convolution implemented in [encoder.py](https://github.com/keyu-tian/SparK/blob/main/encoder.py) to simulate submanifold sparse convolution by default.
 If `--sparse_conv=1` is not specified, this masked convolution would be used in pre-training.
 
 **For anyone who might want to run SparK on another architectures**:
-we still recommend you to use the default masked convolution, 
+we recommend you to use the default masked convolution, 
 given the limited optimization of sparse convolution in hardware, and in particular the lack of efficient implementation of many modern operators like grouped conv and dilated conv.
 
