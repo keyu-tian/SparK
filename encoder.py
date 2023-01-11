@@ -18,7 +18,7 @@ def _get_active_ex_or_ii(H, returning_active_ex=True):
 
 def sp_conv_forward(self, x: torch.Tensor):
     x = super(type(self), self).forward(x)
-    x *= _get_active_ex_or_ii(H=x.shape[2], returning_active_ex=True)    # (BCHW) *= (B1HW)
+    x *= _get_active_ex_or_ii(H=x.shape[2], returning_active_ex=True)    # (BCHW) *= (B1HW), mask the output of conv
     return x
 
 
@@ -26,8 +26,8 @@ def sp_bn_forward(self, x: torch.Tensor):
     ii = _get_active_ex_or_ii(H=x.shape[2], returning_active_ex=False)
     
     bhwc = x.permute(0, 2, 3, 1)
-    nc = bhwc[ii]
-    nc = super(type(self), self).forward(nc)  # BN1d forward
+    nc = bhwc[ii]                               # select the features on non-masked positions to form a flatten feature `nc`
+    nc = super(type(self), self).forward(nc)    # use BN1d to normalize this flatten feature `nc`
     
     bchw = torch.zeros_like(bhwc)
     bchw[ii] = nc
@@ -36,23 +36,23 @@ def sp_bn_forward(self, x: torch.Tensor):
 
 
 class SparseConv2d(nn.Conv2d):
-    forward = sp_conv_forward
+    forward = sp_conv_forward   # hack: override the forward function; see `sp_conv_forward` above for more details
 
 
 class SparseMaxPooling(nn.MaxPool2d):
-    forward = sp_conv_forward
+    forward = sp_conv_forward   # hack: override the forward function; see `sp_conv_forward` above for more details
 
 
 class SparseAvgPooling(nn.AvgPool2d):
-    forward = sp_conv_forward
+    forward = sp_conv_forward   # hack: override the forward function; see `sp_conv_forward` above for more details
 
 
 class SparseBatchNorm2d(nn.BatchNorm1d):
-    forward = sp_bn_forward
+    forward = sp_bn_forward     # hack: override the forward function; see `sp_bn_forward` above for more details
 
 
 class SparseSyncBatchNorm2d(nn.SyncBatchNorm):
-    forward = sp_bn_forward
+    forward = sp_bn_forward     # hack: override the forward function; see `sp_bn_forward` above for more details
 
 
 class SparseConvNeXtLayerNorm(nn.LayerNorm):

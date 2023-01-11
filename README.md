@@ -53,7 +53,7 @@ This is an official implementation of the paper "Designing BERT for Convolutiona
 - [ ] Colab playground
 - [ ] Inference and visualization demo
 
-## Install
+## Installation
 
 Check [INSTALL.md](INSTALL.md) to install all dependencies. Our implementation is based on `torch==1.10.0+cu113`, `torchvision==0.11.1+cu113`, and `timm==0.5.4`. [This](https://github.com/facebookresearch/SparseConvNet) sparse convolution framework is an optional library.
 
@@ -86,7 +86,7 @@ We also appreciate these elegant frameworks:
 
 
 ## License
-This project is under the CC-BY 4.0 license. See [LICENSE](LICENSE) for more details.
+This project is under the MIT license. See [LICENSE](LICENSE) for more details.
 
 
 ## Citation
