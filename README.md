@@ -2,6 +2,7 @@
 
 This is an official implementation of the paper "Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling". (submitted to [openreview ICLR'23](https://openreview.net/forum?id=NRxydtWup1S) in Sep. 2022)
 
+
 <p align="center">
 <img src="https://user-images.githubusercontent.com/39692511/211496814-e6cb9243-833c-43d2-a859-d35afa96ed22.png" width=86% class="center">
 </p>
@@ -14,6 +15,9 @@ This is an official implementation of the paper "Designing BERT for Convolutiona
   [[`bibtex`](https://github.com/keyu-tian/SparK#citation)]
 </div>
 
+## A quick explainable video demo for spark
+
+https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8235-e8907fd81e0e.mp4
 
 ## What's new here?
 
