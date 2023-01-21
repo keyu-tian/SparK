@@ -1,6 +1,6 @@
 # SparK✨: the first successful BERT-style pre-training on any convolutional networks [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
 
-This is an official implementation of the paper "Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling". (submitted to [openreview ICLR'23](https://openreview.net/forum?id=NRxydtWup1S) in Sep. 2022)
+This is an official implementation of the paper "Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling". (submitted to [openreview ICLR'23](https://openreview.net/forum?id=NRxydtWup1S) in Sep. 2022, accepted as ***ICLR Spotlight***)
 
 
 <p align="center">
@@ -14,6 +14,10 @@ This is an official implementation of the paper "Designing BERT for Convolutiona
   [[`state-of-the-art self-supervised convnet`](https://paperswithcode.com/sota/self-supervised-image-classification-on-1?tag_filter=17?p=designing-bert-for-convolutional-networks)]
   [[`bibtex`](https://github.com/keyu-tian/SparK#citation)]
 </div>
+
+## Highlight
+
+* SparK is accepted to ICLR 2023 as an **Spotlight Presentation**!
 
 ## A quick explainable video demo for spark
 
