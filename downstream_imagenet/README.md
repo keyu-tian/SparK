@@ -1,30 +1,57 @@
+## About code isolation
+
+This `downstream_imagenet` is isolated from pre-training codes. One can treat this `downstream_imagenet` as an independent codebase 🛠️.
+
+
 ## Preparation for ImageNet-1k fine-tuning
 
 See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to prepare dependencies and ImageNet dataset.
 
-## Training from pre-trained checkpoint
+**Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt).**
 
-The script file for ImageNet-1k fine-tuning is [downstream_imagenet/main.sh](https://github.com/keyu-tian/SparK/blob/main/downstream_imagenet/main.sh).
-Since `torch.nn.parallel.DistributedDataParallel` is used for distributed training, you are expected to specify some distributed arguments on each node, including:
-- `--num_nodes=<INTEGER>`
-- `--ngpu_per_node=<INTEGER>`
-- `--node_rank=<INTEGER>`
-- `--master_address=<ADDRESS>`
-- `--master_port=<INTEGER>`
 
-It is required to specify ImageNet data folder, model name, and checkpoint file path to run fine-tuning.
+## Fine-tuning on ImageNet-1k from pre-trained weights
+
+Run [downstream_imagenet/main.sh](https://github.com/keyu-tian/SparK/blob/main/downstream_imagenet/main.sh).
+
+It is **required** to specify ImageNet data folder, model name, and checkpoint file path to run fine-tuning.
 All the other arguments have their default values, listed in [downstream_imagenet/arg.py#L13](https://github.com/keyu-tian/SparK/blob/main/downstream_imagenet/arg.py#L13).
-You can override any defaults by adding key-word arguments (like `--bs=2048`) to `main.sh`.
+You can override any defaults by passing key-word arguments (like `--bs=2048`) to `main.sh`.
 
-Here is an example command:
+
+Here is an example command fine-tuning a ResNet50 on single machine with 8 GPUs:
 ```shell script
 $ cd /path/to/SparK/downstream_imagenet
 $ bash ./main.sh <experiment_name> \
---num_nodes=1 --ngpu_per_node=8 --node_rank=0 \
---master_address=128.0.0.0 --master_port=30000 \
---data_path=/path/to/imagenet \
---model=resnet50 --resume_from=/path/to/resnet50_1kpretrained.pth
+  --num_nodes=1 --ngpu_per_node=8 \
+  --data_path=/path/to/imagenet \
+  --model=resnet50 --resume_from=/some/path/to/timm_resnet50_1kpretrained.pth
+```
+
+For multiple machines, change the `num_nodes` to your count and plus these args:
+```shell script
+--node_rank=<rank_starts_from_0> --master_address=<some_address> --master_port=<some_port>
 ```
 
 Note that the first argument `<experiment_name>` is the name of your experiment, which would be used to create an output directory named `output_<experiment_name>`.
 
+
+## Logging
+
+Once an experiment starts running, the following files would be automatically created and updated in `SparK/output_<experiment_name>`:
+
+- `<model>_1kfinetuned_last.pth`: the latest model weights
+- `<model>_1kfinetuned_best.pth`: model weights with the highest acc
+- `<model>_1kfinetuned_best_ema.pth`: EMA weights with the highest acc
+- `finetune_log.txt`: records some important information such as:
+    - `git_commit_id`: git version
+    - `cmd`: all arguments passed to the script
+    
+    It also reports training loss/acc, best evaluation acc, and remaining time at each epoch.
+
+These files can help trace the experiment well.
+
+
+## Resuming
+
+Add `--resume_from=path/to/<model>_1kfinetuned_last.pth` to resume from a latest saved checkpoint.

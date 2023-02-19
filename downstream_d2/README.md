@@ -1,3 +1,7 @@
+## About code isolation
+
+This `downstream_d2` is isolated from pre-training codes. One can treat this `downstream_d2` as an independent codebase 🛠️.
+
 
 ## Fine-tuned ResNet-50 weights, log files, and performance
 

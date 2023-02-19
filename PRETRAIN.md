@@ -1,25 +1,30 @@
-## Pre-training from scratch
+## Preparation for ImageNet-1k fine-tuning
 
-The script file for pre-training is [main.sh](https://github.com/keyu-tian/SparK/blob/main/main.sh).
-Since `torch.nn.parallel.DistributedDataParallel` is used for distributed training, you are expected to specify some distributed arguments on each node, including:
-- `--num_nodes=<INTEGER>`
-- `--ngpu_per_node=<INTEGER>`
-- `--node_rank=<INTEGER>`
-- `--master_address=<ADDRESS>`
-- `--master_port=<INTEGER>`
+See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to prepare dependencies and ImageNet dataset.
 
-It is required to specify ImageNet data folder and model name to run fine-tuning.
-You can add arbitrary key-word arguments (like `--ep=400 --bs=2048`) to specify some pre-training hyperparameters (see [utils/arg_utils.py](https://github.com/keyu-tian/SparK/blob/main/utils/arg_utils.py) for all hyperparameters and their default values).
+**Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt).**
 
 
-Here is an example command:
+## Pre-training on ImageNet-1k from scratch
+
+Run [main.sh](https://github.com/keyu-tian/SparK/blob/main/main.sh).
+
+It is **required** to specify ImageNet data folder and model name to run pre-training.
+Besides, you can pass arbitrary key-word arguments (like `--ep=400 --bs=2048`) to `main.sh` to specify some pre-training hyperparameters (see [utils/arg_utils.py](https://github.com/keyu-tian/SparK/blob/main/utils/arg_utils.py) for all hyperparameters and their default values).
+
+
+Here is an example command pre-training a ResNet50 on single machine with 8 GPUs:
 ```shell script
 $ cd /path/to/SparK
 $ bash ./main.sh <experiment_name> \
---num_nodes=1 --ngpu_per_node=8 --node_rank=0 \
---master_address=128.0.0.0 --master_port=30000 \
---data_path=/path/to/imagenet \
---model=resnet50 --ep=1600 --bs=4096
+  --num_nodes=1 --ngpu_per_node=8 \
+  --data_path=/path/to/imagenet \
+  --model=resnet50 --ep=1600 --bs=4096
+```
+
+For multiple machines, change the `num_nodes` to your count and plus these args:
+```shell script
+--node_rank=<rank_starts_from_0> --master_address=<some_address> --master_port=<some_port>
 ```
 
 Note that the first argument `<experiment_name>` is the name of your experiment, which would be used to create an output directory named `output_<experiment_name>`.
@@ -30,7 +35,7 @@ Note that the first argument `<experiment_name>` is the name of your experiment,
 Once an experiment starts running, the following files would be automatically created and updated in `SparK/output_<experiment_name>`:
 
 - `<model>_still_pretraining.pth`: saves model and optimizer states, current epoch, current reconstruction loss, etc; can be used to resume pre-training
-- `<model>__1kpretrained.pth`: can be used for downstream fine-tuning
+- `<model>_1kpretrained.pth`: can be used for downstream fine-tuning
 - `pretrain_log.txt`: records some important information such as:
     - `git_commit_id`: git version
     - `cmd`: all arguments passed to the script
