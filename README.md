@@ -28,7 +28,8 @@ Official implementation of "Designing BERT for Convolutional Networks: ***Spar**
 
 ## News
 
-- We are honored to be invited by Synced ("机器之心机动组视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am)**, welcome!
+- We are honored to be invited by Synced ("机器之心机动组 视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am, UTC+8 7pm)**, welcome!
+- Another share on [TechBeat (将门创投)](https://www.techbeat.net/talk1) is scheduled on Mar. 16th (UTC+0 12am, UTC+8 8pm) too!
 
 
 ## Video demo
@@ -79,10 +80,10 @@ https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8
 
 | arch. | acc@1 | #params | flops | model |
 |:---:|:---:|:---:|:---:|:---:|
-| ResNet50   | 84.1 | 26M  | 4.1G | [drive](https://drive.google.com/file/d/1H8605HbxGvrsu4x4rIoNr-Wkd7JkxFPQ/view?usp=share_link) |
-| ResNet101  | 84.8 | 45M  | 7.9G | [drive](https://drive.google.com/file/d/1ZwTztjU-_rfvOVfLoce9SMw2Fx0DQfoO/view?usp=share_link) |
-| ResNet152  | 85.4 | 60M | 11.6G | [drive](https://drive.google.com/file/d/1FOVuECnzQAI-OzE-hnrqW7tVpg8kTziM/view?usp=share_link) |
-| ResNet200  | 85.4 | 65M | 15.1G | [drive](https://drive.google.com/file/d/1_Q4e30qqhjchrdyW3fT6P98Ga-WnQ57s/view?usp=share_link) |
+| ResNet50   | 80.6 | 26M  | 4.1G | [drive](https://drive.google.com/file/d/1H8605HbxGvrsu4x4rIoNr-Wkd7JkxFPQ/view?usp=share_link) |
+| ResNet101  | 82.2 | 45M  | 7.9G | [drive](https://drive.google.com/file/d/1ZwTztjU-_rfvOVfLoce9SMw2Fx0DQfoO/view?usp=share_link) |
+| ResNet152  | 82.7 | 60M | 11.6G | [drive](https://drive.google.com/file/d/1FOVuECnzQAI-OzE-hnrqW7tVpg8kTziM/view?usp=share_link) |
+| ResNet200  | 83.1 | 65M | 15.1G | [drive](https://drive.google.com/file/d/1_Q4e30qqhjchrdyW3fT6P98Ga-WnQ57s/view?usp=share_link) |
 | ConvNeXt-S | 84.1 | 50M  | 8.7G | [drive](https://drive.google.com/file/d/1Ah6lgDY5YDNXoXHQHklKKMbEd08RYivN/view?usp=share_link) |
 | ConvNeXt-B | 84.8 | 89M  | 15.4G | [drive](https://drive.google.com/file/d/1ZjWbqI1qoBcqeQijI5xX9E-YNkxpJcYV/view?usp=share_link) |
 | ConvNeXt-L | 85.4 | 198M | 34.4G | [drive](https://drive.google.com/file/d/1qfYzGUpYBzuA88_kXkVl4KNUwfutMVfw/view?usp=share_link) |
