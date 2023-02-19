@@ -64,20 +64,4 @@ def build_sparse_encoder(name: str, input_size: int, sbn=False, drop_path_rate=0
     if drop_path_rate != 0:
         kwargs['drop_path_rate'] = drop_path_rate
     print(f'[sparse_cnn] model kwargs={kwargs}')
-    cnn = create_model(name, **kwargs)
-    if hasattr(cnn, 'global_pool'):
-        if callable(cnn.global_pool):
-            cnn.global_pool = torch.nn.Identity()
-        elif isinstance(cnn.global_pool, str):
-            cnn.global_pool = ''
-    
-    if not isinstance(downsample_raito, int) or not isinstance(fea_dim, int):
-        with torch.no_grad():
-            cnn.eval()
-            o = cnn(torch.rand(1, 3, input_size, input_size))
-            downsample_raito = input_size // o.shape[-1]
-            fea_dim = o.shape[1]
-            cnn.train()
-        print(f'[sparse_cnn] downsample_raito={downsample_raito}, fea_dim={fea_dim}')
-    
-    return SparseEncoder(cnn, input_size=input_size, downsample_raito=downsample_raito, encoder_fea_dim=fea_dim, verbose=verbose, sbn=sbn)
+    return SparseEncoder(create_model(name, **kwargs), input_size=input_size, downsample_raito=downsample_raito, encoder_fea_dim=fea_dim, sbn=sbn, verbose=verbose)

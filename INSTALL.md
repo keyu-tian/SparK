@@ -6,7 +6,6 @@ $ conda create -n spark python=3.8 -y
 $ conda activate spark
 ```
 
-
 2. Install `PyTorch` and `timm` (better to use `torch~=1.10`, `torchvision~=0.11`, and `timm==0.5.4`) then other python packages:
 ```shell script
 $ pip install torch==1.10.0+cu113 torchvision==0.11.1+cu113 -f https://download.pytorch.org/whl/torch_stable.html

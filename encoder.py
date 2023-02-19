@@ -10,6 +10,7 @@ from timm.models.layers import DropPath
 
 
 _cur_active: torch.Tensor = None            # B1ff
+# todo: try to use `gather` for speed?
 def _get_active_ex_or_ii(H, returning_active_ex=True):
     downsample_raito = H // _cur_active.shape[-1]
     active_ex = _cur_active.repeat_interleave(downsample_raito, 2).repeat_interleave(downsample_raito, 3)
@@ -70,8 +71,8 @@ class SparseConvNeXtLayerNorm(nn.LayerNorm):
         self.sparse = sparse
     
     def forward(self, x):
-        if x.ndim == 4: # BHWC
-            if self.data_format == "channels_last":
+        if x.ndim == 4: # BHWC or BCHW
+            if self.data_format == "channels_last": # BHWC
                 if self.sparse:
                     ii = _get_active_ex_or_ii(H=x.shape[1], returning_active_ex=False)
                     nc = x[ii]
@@ -82,7 +83,7 @@ class SparseConvNeXtLayerNorm(nn.LayerNorm):
                     return x
                 else:
                     return super(SparseConvNeXtLayerNorm, self).forward(x)
-            else:       # channels_first
+            else:       # channels_first, BCHW
                 if self.sparse:
                     ii = _get_active_ex_or_ii(H=x.shape[2], returning_active_ex=False)
                     bhwc = x.permute(0, 2, 3, 1)
@@ -129,7 +130,7 @@ class SparseConvNeXtBlock(nn.Module):
         self.pwconv2 = nn.Linear(4 * dim, dim)
         self.gamma = nn.Parameter(layer_scale_init_value * torch.ones((dim)),
                                   requires_grad=True) if layer_scale_init_value > 0 else None
-        self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
+        self.drop_path: nn.Module = DropPath(drop_path) if drop_path > 0. else nn.Identity()
         self.sparse = sparse
     
     def forward(self, x):
@@ -138,7 +139,7 @@ class SparseConvNeXtBlock(nn.Module):
         x = x.permute(0, 2, 3, 1)  # (N, C, H, W) -> (N, H, W, C)
         x = self.norm(x)
         x = self.pwconv1(x)
-        x = self.act(x)
+        x = self.act(x)            # GELU(0) == (0), so there is no need to mask x (no need to `x *= _get_active_ex_or_ii`)
         x = self.pwconv2(x)
         if self.gamma is not None:
             x = self.gamma * x
@@ -155,9 +156,9 @@ class SparseConvNeXtBlock(nn.Module):
 
 
 class SparseEncoder(nn.Module):
-    def __init__(self, cnn, input_size, downsample_raito, encoder_fea_dim, verbose=False, sbn=False):
+    def __init__(self, conv_model, input_size, downsample_raito, encoder_fea_dim, sbn=False, verbose=False):
         super(SparseEncoder, self).__init__()
-        self.sp_cnn = SparseEncoder.dense_model_to_sparse(m=cnn, verbose=verbose, sbn=sbn)
+        self.sp_cnn = SparseEncoder.dense_model_to_sparse(m=conv_model, verbose=verbose, sbn=sbn)
         self.input_size, self.downsample_raito, self.fea_dim = input_size, downsample_raito, encoder_fea_dim
     
     @staticmethod
@@ -203,5 +204,5 @@ class SparseEncoder(nn.Module):
         del m
         return oup
     
-    def forward(self, x, pyramid):
-        return self.sp_cnn(x, pyramid=pyramid)
+    def forward(self, x, hierarchy):
+        return self.sp_cnn(x, hierarchy=hierarchy)

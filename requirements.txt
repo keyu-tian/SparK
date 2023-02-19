@@ -1,8 +1,5 @@
-blobfile
-easydict
-einops
 numpy
-objprint
 Pillow
-requests
 typed-argument-parser
+timm==0.5.4
+tensorboardx

@@ -16,7 +16,7 @@ from typing import Iterator
 import numpy as np
 import pytz
 import torch
-import torch.distributed as tdist
+from torch.utils.tensorboard import SummaryWriter
 
 import dist
 
@@ -31,14 +31,14 @@ def is_pow2n(x):
     return x > 0 and (x & (x - 1) == 0)
 
 
-def time_str():
-    return datetime.datetime.now(tz=pytz.timezone('Asia/Shanghai')).strftime('[%m-%d %H:%M:%S]')
+def time_str(for_dirname=False):
+    return datetime.datetime.now(tz=pytz.timezone('Asia/Shanghai')).strftime('%m-%d_%H-%M-%S' if for_dirname else '[%m-%d %H:%M:%S]')
 
 
 def init_distributed_environ(exp_dir):
     dist.initialize()
     dist.barrier()
-
+    
     import torch.backends.cudnn as cudnn
     cudnn.benchmark = True
     cudnn.deterministic = False
@@ -48,8 +48,100 @@ def init_distributed_environ(exp_dir):
         sys.stdout, sys.stderr = _SyncPrintToFile(exp_dir, stdout=True), _SyncPrintToFile(exp_dir, stdout=False)
 
 
-def save_checkpoint(fname, args, epoch, performance_desc, model_without_ddp_state, optimizer_state):
-    checkpoint_path = os.path.join(args.exp_dir, fname)
+def _set_print_only_on_master_proc(is_master):
+    import builtins as __builtin__
+    
+    builtin_print = __builtin__.print
+    
+    def prt(msg, *args, **kwargs):
+        force = kwargs.pop('force', False)
+        clean = kwargs.pop('clean', False)
+        deeper = kwargs.pop('deeper', False)
+        if is_master or force:
+            if not clean:
+                f_back = sys._getframe().f_back
+                if deeper and f_back.f_back is not None:
+                    f_back = f_back.f_back
+                file_desc = f'{f_back.f_code.co_filename:24s}'[-24:]
+                msg = f'{time_str()} ({file_desc}, line{f_back.f_lineno:-4d})=> {msg}'
+            builtin_print(msg, *args, **kwargs)
+    
+    __builtin__.print = prt
+
+
+class _SyncPrintToFile(object):
+    def __init__(self, exp_dir, stdout=True):
+        self.terminal = sys.stdout if stdout else sys.stderr
+        fname = os.path.join(exp_dir, 'stdout_backup.txt' if stdout else 'stderr_backup.txt')
+        self.log = open(fname, 'w')
+        self.log.flush()
+    
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+        self.log.flush()
+    
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
+
+
+class TensorboardLogger(object):
+    def __init__(self, log_dir, is_master, prefix='pt'):
+        self.is_master = is_master
+        self.writer = SummaryWriter(log_dir=log_dir) if self.is_master else None
+        self.step = 0
+        self.prefix = prefix
+        self.log_freq = 300
+    
+    def set_step(self, step=None):
+        if step is not None:
+            self.step = step
+        else:
+            self.step += 1
+    
+    def get_loggable(self, step=None):
+        if step is None:  # iter wise
+            step = self.step
+            loggable = step % self.log_freq == 0
+        else:  # epoch wise
+            loggable = True
+        return step, (loggable and self.is_master)
+    
+    def update(self, head='scalar', step=None, **kwargs):
+        step, loggable = self.get_loggable(step)
+        if loggable:
+            head = f'{self.prefix}_{head}'
+            for k, v in kwargs.items():
+                if v is None:
+                    continue
+                if isinstance(v, torch.Tensor):
+                    v = v.item()
+                assert isinstance(v, (float, int))
+                self.writer.add_scalar(head + "/" + k, v, step)
+    
+    def log_distribution(self, tag, values, step=None):
+        step, loggable = self.get_loggable(step)
+        if loggable:
+            if not isinstance(values, torch.Tensor):
+                values = torch.tensor(values)
+            self.writer.add_histogram(tag=tag, values=values, global_step=step)
+    
+    def log_image(self, tag, img, step=None, dataformats='NCHW'):
+        step, loggable = self.get_loggable(step)
+        if loggable:
+            # img = img.cpu().numpy()
+            self.writer.add_image(tag, img, step, dataformats=dataformats)
+    
+    def flush(self):
+        if self.is_master: self.writer.flush()
+    
+    def close(self):
+        if self.is_master: self.writer.close()
+
+
+def save_checkpoint(save_to, args, epoch, performance_desc, model_without_ddp_state, optimizer_state):
+    checkpoint_path = os.path.join(args.exp_dir, save_to)
     if dist.is_local_master():
         to_save = {
             'args': str(args),
@@ -58,25 +150,37 @@ def save_checkpoint(fname, args, epoch, performance_desc, model_without_ddp_stat
             'performance_desc': performance_desc,
             'module': model_without_ddp_state,
             'optimizer': optimizer_state,
+            'is_pretrain': True,
         }
         torch.save(to_save, checkpoint_path)
-    dist.barrier()
 
 
-def load_checkpoint(fname, model_without_ddp, optimizer):
-    print(f'[try to resume from file `{fname}`]')
-    checkpoint = torch.load(fname, map_location='cpu')
+def save_checkpoint_for_finetune(save_to, args, sp_cnn_state):
+    checkpoint_path = os.path.join(args.exp_dir, save_to)
+    if dist.is_local_master():
+        to_save = {
+            'arch': args.model,
+            'module': sp_cnn_state,
+            'is_pretrain': False,
+        }
+        torch.save(to_save, checkpoint_path)
+
+
+def load_checkpoint(resume_from, model_without_ddp, optimizer):
+    if len(resume_from) == 0:
+        return 0, '[no performance_desc]'
+    print(f'[try to resume from file `{resume_from}`]')
+    checkpoint = torch.load(resume_from, map_location='cpu')
     
-    next_ep, performance_desc = checkpoint['epoch'] + 1, checkpoint['performance_desc']
+    ep_start, performance_desc = checkpoint.get('epoch', -1) + 1, checkpoint.get('performance_desc', '[no performance_desc]')
     missing, unexpected = model_without_ddp.load_state_dict(checkpoint['module'], strict=False)
     print(f'[load_checkpoint] missing_keys={missing}')
     print(f'[load_checkpoint] unexpected_keys={unexpected}')
-    print(f'[load_checkpoint] next_ep={next_ep}, performance_desc={performance_desc}')
+    print(f'[load_checkpoint] ep_start={ep_start}, performance_desc={performance_desc}')
     
     if 'optimizer' in checkpoint:
         optimizer.load_state_dict(checkpoint['optimizer'])
-    
-    return next_ep, performance_desc
+    return ep_start, performance_desc
 
 
 class SmoothedValue(object):
@@ -102,8 +206,8 @@ class SmoothedValue(object):
         Warning: does not synchronize the deque!
         """
         t = torch.tensor([self.count, self.total], dtype=torch.float64, device='cuda')
-        tdist.barrier()
-        tdist.all_reduce(t)
+        dist.barrier()
+        dist.allreduce(t)
         t = t.tolist()
         self.count = int(t[0])
         self.total = t[1]
@@ -129,12 +233,6 @@ class SmoothedValue(object):
     @property
     def value(self):
         return self.deque[-1]
-
-    def time_preds(self, counts):
-        remain_secs = counts * self.median
-        remain_time = datetime.timedelta(seconds=round(remain_secs))
-        finish_time = time.strftime("%m-%d %H:%M", time.localtime(time.time() + remain_secs))
-        return remain_secs, str(remain_time), finish_time
     
     def __str__(self):
         return self.fmt.format(
@@ -183,7 +281,7 @@ class MetricLogger(object):
         self.meters[name] = meter
     
     def log_every(self, max_iters, itrt, print_freq, header=None):
-        print_iters = set(np.linspace(0, max_iters-1, print_freq, dtype=int).tolist())
+        print_iters = set(np.linspace(0, max_iters - 1, print_freq, dtype=int).tolist())
         if not header:
             header = ''
         start_time = time.time()
@@ -196,8 +294,8 @@ class MetricLogger(object):
             '[{0' + space_fmt + '}/{1}]',
             'eta: {eta}',
             '{meters}',
-            'time: {time}',
-            'data: {data}'
+            'iter: {time}s',
+            'data: {data}s'
         ]
         log_msg = self.delimiter.join(log_msg)
         
@@ -233,41 +331,3 @@ class MetricLogger(object):
         total_time_str = str(datetime.timedelta(seconds=int(total_time)))
         print('{}   Total time:      {}   ({:.3f} s / it)'.format(
             header, total_time_str, total_time / max_iters))
-
-
-def _set_print_only_on_master_proc(is_master):
-    import builtins as __builtin__
-    
-    builtin_print = __builtin__.print
-    
-    def prt(msg, *args, **kwargs):
-        force = kwargs.pop('force', False)
-        clean = kwargs.pop('clean', False)
-        deeper = kwargs.pop('deeper', False)
-        if is_master or force:
-            if not clean:
-                f_back = sys._getframe().f_back
-                if deeper and f_back.f_back is not None:
-                    f_back = f_back.f_back
-                file_desc = f'{f_back.f_code.co_filename:24s}'[-24:]
-                msg = f'{time_str()} ({file_desc}, line{f_back.f_lineno:-4d})=> {msg}'
-            builtin_print(msg, *args, **kwargs)
-    
-    __builtin__.print = prt
-
-
-class _SyncPrintToFile(object):
-    def __init__(self, exp_dir, stdout=True):
-        self.terminal = sys.stdout if stdout else sys.stderr
-        fname = os.path.join(exp_dir, 'stdout_backup.txt' if stdout else 'stderr_backup.txt')
-        self.log = open(fname, 'w')
-        self.log.flush()
-    
-    def write(self, message):
-        self.terminal.write(message)
-        self.log.write(message)
-        self.log.flush()
-    
-    def flush(self):
-        self.terminal.flush()
-        self.log.flush()

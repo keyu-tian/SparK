@@ -4,7 +4,6 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-import functools
 import os
 from typing import List
 from typing import Union
@@ -12,7 +11,9 @@ from typing import Union
 import torch
 import torch.distributed as tdist
 import torch.multiprocessing as mp
+from torch.distributed import barrier as __barrier
 
+barrier = __barrier
 __rank, __local_rank, __world_size, __device = 0, 0, 1, 'cpu'
 __initialized = False
 
@@ -28,7 +29,7 @@ def initialize(backend='nccl'):
     global_rank, num_gpus = int(os.environ.get('RANK', 'error')), torch.cuda.device_count()
     local_rank = global_rank % num_gpus
     torch.cuda.set_device(local_rank)
-    tdist.init_process_group(backend=backend)  # 不要 init_method='env://'
+    tdist.init_process_group(backend=backend)
     
     global __rank, __local_rank, __world_size, __device, __initialized
     __local_rank = local_rank
@@ -71,14 +72,6 @@ def parallelize(net, syncbn=False):
     return net
 
 
-def new_group(ranks: List[int]):
-    return tdist.new_group(ranks=ranks)
-
-
-def barrier():
-    tdist.barrier()
-
-
 def allreduce(t: torch.Tensor) -> None:
     if not t.is_cuda:
         cu = t.detach().cuda()
@@ -105,38 +98,3 @@ def broadcast(t: torch.Tensor, src_rank) -> None:
         t.copy_(cu.cpu())
     else:
         tdist.broadcast(t, src=src_rank)
-
-
-def dist_fmt_vals(val, fmt: Union[str, None] = '%.2f') -> Union[torch.Tensor, List]:
-    ts = torch.zeros(__world_size)
-    ts[__rank] = val
-    allreduce(ts)
-    if fmt is None:
-        return ts
-    return [fmt % v for v in ts.cpu().numpy().tolist()]
-
-
-def master_only(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        force = kwargs.pop('force', False)
-        if force or is_master():
-            ret = func(*args, **kwargs)
-        else:
-            ret = None
-        barrier()
-        return ret
-    return wrapper
-
-
-def local_master_only(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        force = kwargs.pop('force', False)
-        if force or is_local_master():
-            ret = func(*args, **kwargs)
-        else:
-            ret = None
-        barrier()
-        return ret
-    return wrapper

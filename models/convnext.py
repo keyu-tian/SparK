@@ -4,7 +4,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 #
-# This file is basically a copy to: https://github.com/facebookresearch/ConvNeXt/blob/main/models/convnext.py
+# This file is basically a copy of: https://github.com/facebookresearch/ConvNeXt/blob/06f7b05f922e21914916406141f50f82b4a15852/models/convnext.py
 
 import torch
 import torch.nn as nn
@@ -66,147 +66,67 @@ class ConvNeXt(nn.Module):
         if num_classes > 0:
             self.norm = SparseConvNeXtLayerNorm(dims[-1], eps=1e-6, sparse=False)  # final norm layer for LE/FT; should not be sparse
             self.fc = nn.Linear(dims[-1], num_classes)
-            # self.fc.weight.data.mul_(head_init_scale)     # todo: perform this outside
-            # self.fc.bias.data.mul_(head_init_scale)       # todo: perform this outside
         else:
             self.norm = nn.Identity()
             self.fc = nn.Identity()
-        
-        self.with_pooling = len(global_pool) > 0
     
     def _init_weights(self, m):
         if isinstance(m, (nn.Conv2d, nn.Linear)):
             trunc_normal_(m.weight, std=.02)
             nn.init.constant_(m.bias, 0)
     
-    def forward_features(self, x, pyramid: int): # pyramid: 0, 1, 2, 3, 4
+    def forward(self, x, hierarchy=0):
         ls = []
         for i in range(4):
             x = self.downsample_layers[i](x)
             x = self.stages[i](x)
-            if pyramid:
-                ls.append(x)
-        
-        if pyramid:
-            for i in range(len(ls)-pyramid-1, -1, -1):
-                del ls[i]
-            return [None] * (4 - pyramid) + ls
+            ls.append(x if hierarchy >= 4-i else None)
+        if hierarchy:
+            return ls
         else:
-            if self.with_pooling:
-                x = x.mean([-2, -1])    # global average pooling, (N, C, H, W) -> (N, C)
-            return x
-    
-    def forward(self, x, pyramid=0):
-        if pyramid == 0:
-            x = self.forward_features(x, pyramid=pyramid)
-            x = self.fc(self.norm(x))
-            return x
-        else:
-            return self.forward_features(x, pyramid=pyramid)
+            return self.fc(self.norm(x.mean([-2, -1]))) # (B, C, H, W) =mean=> (B, C) =norm&fc=> (B, NumCls)
     
     def get_classifier(self):
         return self.fc
     
     def extra_repr(self):
         return f'drop_path_rate={self.drop_path_rate}, layer_scale_init_value={self.layer_scale_init_value:g}'
-    
-    def get_layer_id_and_scale_exp(self, para_name: str):
-        N = 12 if self.depths[-2] > 9 else 6
-        if para_name.startswith("downsample_layers"):
-            stage_id = int(para_name.split('.')[1])
-            if stage_id == 0:
-                layer_id = 0
-            elif stage_id == 1 or stage_id == 2:
-                layer_id = stage_id + 1
-            else:  # stage_id == 3:
-                layer_id = N
-        elif para_name.startswith("stages"):
-            stage_id = int(para_name.split('.')[1])
-            block_id = int(para_name.split('.')[2])
-            if stage_id == 0 or stage_id == 1:
-                layer_id = stage_id + 1
-            elif stage_id == 2:
-                layer_id = 3 + block_id // 3
-            else:  # stage_id == 3:
-                layer_id = N
-        else:
-            layer_id = N + 1  # after backbone
-        
-        return layer_id, N + 1 - layer_id
-
-
-model_urls = {
-    "convnext_tiny_1k": "https://dl.fbaipublicfiles.com/convnext/convnext_tiny_1k_224_ema.pth",
-    "convnext_small_1k": "https://dl.fbaipublicfiles.com/convnext/convnext_small_1k_224_ema.pth",
-    "convnext_base_1k": "https://dl.fbaipublicfiles.com/convnext/convnext_base_1k_224_ema.pth",
-    "convnext_large_1k": "https://dl.fbaipublicfiles.com/convnext/convnext_large_1k_224_ema.pth",
-    "convnext_tiny_22k": "https://dl.fbaipublicfiles.com/convnext/convnext_tiny_22k_224.pth",
-    "convnext_small_22k": "https://dl.fbaipublicfiles.com/convnext/convnext_small_22k_224.pth",
-    "convnext_base_22k": "https://dl.fbaipublicfiles.com/convnext/convnext_base_22k_224.pth",
-    "convnext_large_22k": "https://dl.fbaipublicfiles.com/convnext/convnext_large_22k_224.pth",
-    "convnext_xlarge_22k": "https://dl.fbaipublicfiles.com/convnext/convnext_xlarge_22k_224.pth",
-}
 
 
 @register_model
 def convnext_tiny(pretrained=False, in_22k=False, **kwargs):
     model = ConvNeXt(depths=[3, 3, 9, 3], dims=[96, 192, 384, 768], **kwargs)
-    if pretrained:
-        url = model_urls['convnext_tiny_22k'] if in_22k else model_urls['convnext_tiny_1k']
-        checkpoint = torch.hub.load_state_dict_from_url(url=url, map_location="cpu", check_hash=True)
-        model.load_state_dict(checkpoint["model"])
     return model
 
 
 @register_model
 def convnext_small(pretrained=False, in_22k=False, **kwargs):
     model = ConvNeXt(depths=[3, 3, 27, 3], dims=[96, 192, 384, 768], **kwargs)
-    if pretrained:
-        url = model_urls['convnext_small_22k'] if in_22k else model_urls['convnext_small_1k']
-        checkpoint = torch.hub.load_state_dict_from_url(url=url, map_location="cpu")
-        model.load_state_dict(checkpoint["model"])
     return model
 
 
 @register_model
 def convnext_base(pretrained=False, in_22k=False, **kwargs):
     model = ConvNeXt(depths=[3, 3, 27, 3], dims=[128, 256, 512, 1024], **kwargs)
-    if pretrained:
-        url = model_urls['convnext_base_22k'] if in_22k else model_urls['convnext_base_1k']
-        checkpoint = torch.hub.load_state_dict_from_url(url=url, map_location="cpu")
-        model.load_state_dict(checkpoint["model"])
     return model
 
 
 @register_model
 def convnext_large(pretrained=False, in_22k=False, **kwargs):
     model = ConvNeXt(depths=[3, 3, 27, 3], dims=[192, 384, 768, 1536], **kwargs)
-    if pretrained:
-        url = model_urls['convnext_large_22k'] if in_22k else model_urls['convnext_large_1k']
-        checkpoint = torch.hub.load_state_dict_from_url(url=url, map_location="cpu")
-        model.load_state_dict(checkpoint["model"])
-    return model
-
-
-@register_model
-def convnext_xlarge(pretrained=False, in_22k=False, **kwargs):
-    model = ConvNeXt(depths=[3, 3, 27, 3], dims=[256, 512, 1024, 2048], **kwargs)
-    if pretrained:
-        assert in_22k, "only ImageNet-22K pre-trained ConvNeXt-XL is available; please set in_22k=True"
-        url = model_urls['convnext_xlarge_22k']
-        checkpoint = torch.hub.load_state_dict_from_url(url=url, map_location="cpu")
-        model.load_state_dict(checkpoint["model"])
     return model
 
 
 if __name__ == '__main__':
     from timm.models import create_model
+    cnx = create_model('convnext_small', sparse=False)
     
-    c = create_model('convnext_small', sparse=False)
+    def prt(lst):
+        print([tuple(t.shape) if t is not None else '(None)' for t in lst])
     with torch.no_grad():
-        x = torch.rand(2, 3, 224, 224)
-        print(c(x).shape)
-        print([None if f is None else f.shape for f in c(x, pyramid=1)])
-        print([None if f is None else f.shape for f in c(x, pyramid=2)])
-        print([None if f is None else f.shape for f in c(x, pyramid=3)])
-        print([None if f is None else f.shape for f in c(x, pyramid=4)])
+        inp = torch.rand(2, 3, 224, 224)
+        prt(cnx(inp))
+        prt(cnx(inp, hierarchy=1))
+        prt(cnx(inp, hierarchy=2))
+        prt(cnx(inp, hierarchy=3))
+        prt(cnx(inp, hierarchy=4))

@@ -1,6 +1,6 @@
-# SparK✨: the first successful BERT-style pre-training on any convolutional networks [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
+# SparK✨: the first successful BERT-style pre-training on any convolutional networks [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580), ICLR'23 Spotlight
 
-This is an official implementation of the paper "Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling". (submitted to [openreview ICLR'23](https://openreview.net/forum?id=NRxydtWup1S) in Sep. 2022, accepted as ***ICLR Spotlight***)
+Official implementation of "Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling".
 
 
 <p align="center">
@@ -15,11 +15,12 @@ This is an official implementation of the paper "Designing BERT for Convolutiona
   [[`bibtex`](https://github.com/keyu-tian/SparK#citation)]
 </div>
 
-## Highlight
+## News
 
-* SparK is accepted to ICLR 2023 as an **Spotlight Presentation**!
+- We are honored to be invited by Synced ("机器之心机动组视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am)**, welcome!
 
-## A quick explainable video demo for spark
+
+## Video demo
 
 https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8235-e8907fd81e0e.mp4
 
@@ -57,17 +58,36 @@ https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8
 ## Catalog
 
 - [x] Pre-training code
-- [ ] Fine-tuning code
-- [ ] Colab playground
-- [ ] Inference and visualization demo
+- [x] Fine-tuning code
+- [ ] Colab visualization playground
+- [ ] Weights & visualization playground on `Huggingface`
+- [ ] Weights in `timm`
+
+
+## Results & ImageNet-1k Pre-trained Checkpoints
+
+| arch. | acc@1 | #params | flops | model |
+|:---:|:---:|:---:|:---:|:---:|
+| ResNet50   | 84.1 | 26M  | 4.1G | [drive](https://drive.google.com/file/d/1H8605HbxGvrsu4x4rIoNr-Wkd7JkxFPQ/view?usp=share_link) |
+| ResNet101  | 84.8 | 45M  | 7.9G | [drive](https://drive.google.com/file/d/1ZwTztjU-_rfvOVfLoce9SMw2Fx0DQfoO/view?usp=share_link) |
+| ResNet152  | 85.4 | 60M | 11.6G | [drive](https://drive.google.com/file/d/1FOVuECnzQAI-OzE-hnrqW7tVpg8kTziM/view?usp=share_link) |
+| ResNet200  | 85.4 | 65M | 15.1G | [drive](https://drive.google.com/file/d/1_Q4e30qqhjchrdyW3fT6P98Ga-WnQ57s/view?usp=share_link) |
+| ConvNeXt-S | 84.1 | 50M  | 8.7G | [drive](https://drive.google.com/file/d/1Ah6lgDY5YDNXoXHQHklKKMbEd08RYivN/view?usp=share_link) |
+| ConvNeXt-B | 84.8 | 89M  | 15.4G | [drive](https://drive.google.com/file/d/1ZjWbqI1qoBcqeQijI5xX9E-YNkxpJcYV/view?usp=share_link) |
+| ConvNeXt-L | 85.4 | 198M | 34.4G | [drive](https://drive.google.com/file/d/1qfYzGUpYBzuA88_kXkVl4KNUwfutMVfw/view?usp=share_link) |
+
+
 
 ## Installation
 
-Check [INSTALL.md](INSTALL.md) to install all dependencies. Our implementation is based on `torch==1.10.0+cu113`, `torchvision==0.11.1+cu113`, and `timm==0.5.4`. [This](https://github.com/facebookresearch/SparseConvNet) sparse convolution framework is an optional library.
+For pre-training and fine-tuning on ImageNet-1k, we highly recommended you to use `torch==1.10.0`, `torchvision==0.11.1`, and `timm==0.5.4`.
+
+Check [INSTALL.md](INSTALL.md) to install all dependencies for pre-training and ImageNet fine-tuning.
 
 ## Pre-training
 
 See [PRETRAIN.md](PRETRAIN.md) to pre-train models on ImageNet.
+
 
 ## Fine-tuning
 
@@ -78,8 +98,7 @@ See [PRETRAIN.md](PRETRAIN.md) to pre-train models on ImageNet.
 
 ## Acknowledgement
 
-
-We heavily referred to these useful codebases:
+We referred to these useful codebases:
 
 - [BEiT](https://github.com/microsoft/unilm/tree/master/beit)
 - [MAE](https://github.com/facebookresearch/mae)

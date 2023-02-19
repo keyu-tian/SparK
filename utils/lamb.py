@@ -5,6 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 #
 # This file is basically a copy to: https://github.com/rwightman/pytorch-image-models/blob/v0.5.4/timm/optim/lamb.py
+# **The only modification** is adding the `global_grad_norm` member for debugging
 
 
 """ PyTorch Lamb optimizer w/ behaviour similar to NVIDIA FusedLamb
@@ -24,7 +25,7 @@ import torch
 from torch.optim.optimizer import Optimizer
 
 
-class TimmLAMB(Optimizer):
+class TheSameAsTimmLAMB(Optimizer):
     """Implements a pure pytorch variant of FuseLAMB (NvLamb variant) optimizer from apex.optimizers.FusedLAMB
     reference: https://github.com/NVIDIA/DeepLearningExamples/blob/master/PyTorch/LanguageModeling/Transformer-XL/pytorch/lamb.py
 
