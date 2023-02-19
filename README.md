@@ -27,10 +27,10 @@ Official implementation of "Designing BERT for Convolutional Networks: ***Spar**
   [[`Twitter`](https://twitter.com/keyutian/status/1616606179144380422)]
 </div>
 
-## News
+## 🔥 News
 
 - We are honored to be invited by Synced ("机器之心机动组 视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am, UTC+8 7pm)**, welcome!
-- Another share on [TechBeat (将门创投)](https://www.techbeat.net/talk1) is scheduled on Mar. 16th (UTC+0 12am, UTC+8 8pm) too!
+- Another share on [TechBeat (将门创投)](https://www.techbeat.net/talk1) is scheduled on **Mar. 16th (UTC+0 12am, UTC+8 8pm)** too!
 
 
 ## Video demo
