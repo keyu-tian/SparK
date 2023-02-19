@@ -15,6 +15,17 @@ Official implementation of "Designing BERT for Convolutional Networks: ***Spar**
   [[`bibtex`](https://github.com/keyu-tian/SparK#citation)]
 </div>
 
+<div align="center">
+
+  [[`ReadPaper`](https://readpaper.com/paper/4710371282714116097)]
+  [[`Synced`](https://syncedreview.com/2023/01/19/bert-style-pretraining-on-convnets-peking-u-bytedance-oxford-us-sparse-masked-modelling-with-hierarchy-leads-the-way/)]
+  [[`The Gradient`](https://thegradientpub.substack.com/p/update-42-ai-news-editors-make-mistakes)]
+  [[`量子位`](https://www.qbitai.com/2023/02/42109.html)]
+  [[`DeepAI`](https://deepai.org/publication/point-m2ae-multi-scale-masked-autoencoders-for-hierarchical-point-cloud-pre-training)]
+  [[`Reddit`](https://www.reddit.com/r/MachineLearning/)]
+  [[`Twitter`](https://twitter.com/keyutian/status/1616606179144380422)]
+</div>
+
 ## News
 
 - We are honored to be invited by Synced ("机器之心机动组视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am)**, welcome!
@@ -64,7 +75,7 @@ https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8
 - [ ] Weights in `timm`
 
 
-## Results & ImageNet-1k Pre-trained Checkpoints
+## ImageNet-1k results and pre-trained checkpoint files
 
 | arch. | acc@1 | #params | flops | model |
 |:---:|:---:|:---:|:---:|:---:|
@@ -86,7 +97,7 @@ Check [INSTALL.md](INSTALL.md) to install all dependencies for pre-training and 
 
 ## Pre-training
 
-See [PRETRAIN.md](PRETRAIN.md) to pre-train models on ImageNet.
+See [PRETRAIN.md](PRETRAIN.md) to pre-train models on ImageNet-1k.
 
 
 ## Fine-tuning

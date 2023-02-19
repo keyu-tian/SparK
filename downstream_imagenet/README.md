@@ -13,7 +13,7 @@ Since `torch.nn.parallel.DistributedDataParallel` is used for distributed traini
 - `--master_port=<INTEGER>`
 
 It is required to specify ImageNet data folder, model name, and checkpoint file path to run fine-tuning.
-All the other arguments have their default values, listed in [downstream_imagenet/arg.py](https://github.com/keyu-tian/SparK/blob/main/downstream_imagenet/arg.py).
+All the other arguments have their default values, listed in [downstream_imagenet/arg.py#L13](https://github.com/keyu-tian/SparK/blob/main/downstream_imagenet/arg.py#L13).
 You can override any defaults by adding key-word arguments (like `--bs=2048`) to `main.sh`.
 
 Here is an example command:
