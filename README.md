@@ -21,8 +21,9 @@ Official implementation of "Designing BERT for Convolutional Networks: ***Spar**
   [[`Synced`](https://syncedreview.com/2023/01/19/bert-style-pretraining-on-convnets-peking-u-bytedance-oxford-us-sparse-masked-modelling-with-hierarchy-leads-the-way/)]
   [[`The Gradient`](https://thegradientpub.substack.com/p/update-42-ai-news-editors-make-mistakes)]
   [[`量子位`](https://www.qbitai.com/2023/02/42109.html)]
+  [[`Bytedance`](https://mp.weixin.qq.com/s/Ak1CeeG83sgO0Wf8KgEIQQ)]
   [[`DeepAI`](https://deepai.org/publication/point-m2ae-multi-scale-masked-autoencoders-for-hierarchical-point-cloud-pre-training)]
-  [[`Reddit`](https://www.reddit.com/r/MachineLearning/)]
+  [[`Reddit`](https://www.reddit.com/r/MachineLearning/comments/10ix0l1/r_iclr2023_spotlight_the_first_bertstyle/)]
   [[`Twitter`](https://twitter.com/keyutian/status/1616606179144380422)]
 </div>
 
