@@ -38,7 +38,7 @@ Note that the first argument `<experiment_name>` is the name of your experiment,
 
 ## Logging
 
-Once an experiment starts running, the following files would be automatically created and updated in `SparK/output_<experiment_name>`:
+Once an experiment starts running, the following files would be automatically created and updated in `output_<experiment_name>`:
 
 - `<model>_1kfinetuned_last.pth`: the latest model weights
 - `<model>_1kfinetuned_best.pth`: model weights with the highest acc

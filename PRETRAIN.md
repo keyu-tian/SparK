@@ -32,7 +32,7 @@ Note that the first argument `<experiment_name>` is the name of your experiment,
 
 ## Logging
 
-Once an experiment starts running, the following files would be automatically created and updated in `SparK/output_<experiment_name>`:
+Once an experiment starts running, the following files would be automatically created and updated in `output_<experiment_name>`:
 
 - `<model>_still_pretraining.pth`: saves model and optimizer states, current epoch, current reconstruction loss, etc; can be used to resume pre-training
 - `<model>_1kpretrained.pth`: can be used for downstream fine-tuning
