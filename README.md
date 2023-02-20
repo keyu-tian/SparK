@@ -77,7 +77,9 @@ https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8
 - [ ] Weights in `timm`
 
 
-## ImageNet-1k results and pre-trained checkpoint files
+## ImageNet-1k results and pre-trained networks weights
+
+**Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
 
 | arch. | acc@1 | #params | flops | model |
 |:---:|:---:|:---:|:---:|:---:|
