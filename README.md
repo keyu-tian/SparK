@@ -1,4 +1,4 @@
-# SparK✨: the first successful BERT-style pre-training on any convolutional networks [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580), ICLR'23 Spotlight
+# SparK✨: A BERT-style pre-training on any convolutional networks [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580), ICLR'23 Spotlight
 
 Official implementation of "Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling".
 
@@ -20,7 +20,7 @@ Official implementation of "Designing BERT for Convolutional Networks: ***Spar**
   [[`ReadPaper`](https://readpaper.com/paper/4710371282714116097)]
   [[`Synced`](https://syncedreview.com/2023/01/19/bert-style-pretraining-on-convnets-peking-u-bytedance-oxford-us-sparse-masked-modelling-with-hierarchy-leads-the-way/)]
   [[`The Gradient`](https://thegradientpub.substack.com/p/update-42-ai-news-editors-make-mistakes)]
-  [[`量子位`](https://www.qbitai.com/2023/02/42109.html)]
+  [[`QbitAI`](https://www.qbitai.com/2023/02/42109.html)]
   [[`Bytedance`](https://mp.weixin.qq.com/s/Ak1CeeG83sgO0Wf8KgEIQQ)]
   [[`DeepAI`](https://deepai.org/publication/designing-bert-for-convolutional-networks-sparse-and-hierarchical-masked-modeling)]
   [[`Reddit`](https://www.reddit.com/r/MachineLearning/comments/10ix0l1/r_iclr2023_spotlight_the_first_bertstyle/)]
