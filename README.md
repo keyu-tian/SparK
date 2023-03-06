@@ -1,4 +1,4 @@
-# SparK✨: A BERT-style pre-training on any convolutional networks [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580), ICLR'23 Spotlight
+# SparK✨: The first successful BERT-style pre-training on any convolutional networks [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580), ICLR'23 Spotlight
 
 Official implementation of "Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling".
 
@@ -29,7 +29,7 @@ Official implementation of "Designing BERT for Convolutional Networks: ***Spar**
 
 ## 🔥 News
 
-- We are honored to be invited by Synced ("机器之心机动组 视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am, UTC+8 7pm)**, welcome!
+- We are honored to be invited by Synced ("机器之心机动组 视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am, UTC+8 7pm)**, welcome! [[`Recorded Video`](https://www.bilibili.com/video/BV1J54y1u7U3/)]
 - Another share on [TechBeat (将门创投)](https://www.techbeat.net/talk1) is scheduled on **Mar. 16th (UTC+0 12am, UTC+8 8pm)** too!
 
 

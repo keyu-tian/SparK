@@ -12,13 +12,14 @@ from tap import Tap
 
 HP_DEFAULT_NAMES = ['bs', 'ep', 'wp_ep', 'opt', 'base_lr', 'lr_scale', 'wd', 'mixup', 'rep_aug', 'drop_path', 'ema']
 HP_DEFAULT_VALUES = {
-    'convnext_small': (4096, 400, 20, 'adam', 0.0002, 0.7, 0.01, 0.8, 3, 0.3, 0.9999),
-    'convnext_base':  (4096, 400, 20, 'adam', 0.0001, 0.7, 0.01, 0.8, 3, 0.4, 0.9999),
-    'convnext_large': (4096, 200, 10, 'adam', 0.0001, 0.7, None, 0.8, 3, 0.5, None),
-    'resnet50': (0.7,),
-    'resnet101': (0.8,),
-    'resnet152': (0.8,),
-    'resnet200': (0.85,),
+    'convnext_small': (4096, 400, 20, 'adam', 0.0002, 0.7, 0.01, 0.8, 3, 0.3,  0.9999),
+    'convnext_base':  (4096, 400, 20, 'adam', 0.0001, 0.7, 0.01, 0.8, 3, 0.4,  0.9999),
+    'convnext_large': (4096, 200, 10, 'adam', 0.0001, 0.7, 0.02, 0.8, 3, 0.5,  0.9999),
+    
+    'resnet50':       (4096, 300, 5,  'lamb', 0.002,  0.7, 0.02, 0.1, 0, 0.05, 0.9999),
+    'resnet101':      (4096, 300, 5,  'lamb', 0.001,  0.8, 0.02, 0.1, 0, 0.2,  0.9999),
+    'resnet152':      (4096, 300, 5,  'lamb', 0.001,  0.8, 0.02, 0.1, 0, 0.2,  0.9999),
+    'resnet200':      (4096, 300, 5,  'lamb', 0.001,  0.8, 0.02, 0.1, 0, 0.2,  0.9999),
 }
 
 
@@ -53,7 +54,7 @@ class FineTuneArgs(Tap):
     
     # - other tricks
     ema: float = 0.         # use EMA if ema > 0
-    sbn: bool = False       # use SyncBatchNorm
+    sbn: bool = True        # use SyncBatchNorm
     
     # NO NEED TO SPECIFIED; each of these args would be updated in runtime automatically
     lr: float = None
