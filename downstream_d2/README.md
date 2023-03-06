@@ -7,7 +7,8 @@ This `downstream_d2` is isolated from pre-training codes. One can treat this `do
 
 <div align="center">
 
-  [[`fine-tuned weights`](https://drive.google.com/file/d/1Ue7SiQ1E_AwgtYo56Fm-iUlQPZ8vIwYj/view?usp=share_link)]
+  [[`weights (pre-trained by SparK)`](https://drive.google.com/file/d/1H8605HbxGvrsu4x4rIoNr-Wkd7JkxFPQ/view?usp=share_link)]
+  [[`weights (fine-tuned on COCO)`](https://drive.google.com/file/d/1Ue7SiQ1E_AwgtYo56Fm-iUlQPZ8vIwYj/view?usp=share_link)]
   [[`metrics.json`](https://drive.google.com/file/d/1wfbUWh4svV8sPWya_0PAhsLHVayDQRCi/view?usp=share_link)]
   [[`log.txt`](https://drive.google.com/file/d/11zVo_87pe9DMAmfNQK9FUfyjQWHTRKxV/view?usp=share_link)]
   [[`tensorboard file`](https://drive.google.com/file/d/1aM1qj8c3-Uka1dZuYmKhgp1lNJpeMDMl/view?usp=share_link)]
