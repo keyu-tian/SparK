@@ -29,8 +29,9 @@ Official implementation of "Designing BERT for Convolutional Networks: ***Spar**
 
 ## 🔥 News
 
+- The share on [TechBeat (将门创投)](https://www.techbeat.net/talk-info?id=758) is scheduled on **Mar. 16th (UTC+0 12am, UTC+8 8pm)** too! [[`Recorded Video`](https://www.techbeat.net/talk-info?id=758)]
 - We are honored to be invited by Synced ("机器之心机动组 视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am, UTC+8 7pm)**, welcome! [[`Recorded Video`](https://www.bilibili.com/video/BV1J54y1u7U3/)]
-- Another share on [TechBeat (将门创投)](https://www.techbeat.net/talk1) is scheduled on **Mar. 16th (UTC+0 12am, UTC+8 8pm)** too!
+- This work got accepted to ICLR 2023 as a Spotlight (notable-top-25%).
 
 
 ## Video demo
