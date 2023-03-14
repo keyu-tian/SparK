@@ -8,10 +8,10 @@ import os
 from typing import Any, Callable, Optional, Tuple
 
 import PIL.Image as PImage
-from timm.data import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD, create_transform
-from timm.data.transforms_factory import transforms_imagenet_eval
+from timm.data import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 from torchvision.datasets.folder import DatasetFolder, IMG_EXTENSIONS
 from torchvision.transforms import transforms
+
 try:
     from torchvision.transforms import InterpolationMode
     interpolation = InterpolationMode.BICUBIC
