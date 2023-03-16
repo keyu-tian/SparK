@@ -103,14 +103,14 @@ Check [INSTALL.md](INSTALL.md) to install all dependencies for pre-training and 
 
 ## Pre-training
 
-See [PRETRAIN.md](PRETRAIN.md) to pre-train models on ImageNet-1k.
+See [pretrain/](pretrain) to pre-train models on ImageNet-1k.
 
 
 ## Fine-tuning
 
-- Models on ImageNet: after installation, check [downstream_imagenet](downstream_imagenet) for subsequent instructions.
-- ResNets on COCO: install `detectron2` and see [downstream_d2](downstream_d2) for more details.
-- ConvNeXts on COCO: install `mmcv` and `mmdetection` then see [downstream_mmdet](downstream_mmdet) for more details.
+- All models on ImageNet: check [downstream_imagenet/](downstream_imagenet) for subsequent instructions.
+- ResNets on COCO: see [downstream_d2/](downstream_d2) for details.
+- ConvNeXts on COCO: see [downstream_mmdet/](downstream_mmdet) for details.
 
 
 ## Acknowledgement

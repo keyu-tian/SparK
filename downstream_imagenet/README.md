@@ -5,7 +5,7 @@ This `downstream_imagenet` is isolated from pre-training codes. One can treat th
 
 ## Preparation for ImageNet-1k fine-tuning
 
-See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to prepare dependencies and ImageNet dataset.
+See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to prepare `pip` dependencies and the ImageNet dataset.
 
 **Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
 

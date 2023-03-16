@@ -1,6 +1,6 @@
 ## Preparation for ImageNet-1k fine-tuning
 
-See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to prepare dependencies and ImageNet dataset.
+See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to prepare `pip` dependencies and the ImageNet dataset.
 
 **Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
 
@@ -10,7 +10,7 @@ See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to pre
 Run [main.sh](https://github.com/keyu-tian/SparK/blob/main/main.sh).
 
 It is **required** to specify ImageNet data folder and model name to run pre-training.
-Besides, you can pass arbitrary key-word arguments (like `--ep=400 --bs=2048`) to `main.sh` to specify some pre-training hyperparameters (see [utils/arg_utils.py](https://github.com/keyu-tian/SparK/blob/main/utils/arg_utils.py) for all hyperparameters and their default values).
+Besides, you can pass arbitrary key-word arguments (like `--ep=400 --bs=2048`) to `main.sh` to specify some pre-training hyperparameters (see [utils/arg_utils.py](https://github.com/keyu-tian/SparK/blob/main/pretrain/utils/arg_utils.py) for all hyperparameters and their default values).
 
 
 Here is an example command pre-training a ResNet50 on single machine with 8 GPUs:
@@ -54,7 +54,7 @@ Add `--resume_from=path/to/<model>still_pretraining.pth` to resume from a saved 
 
 ## Regarding sparse convolution
 
-For generality, we use the masked convolution implemented in [encoder.py](https://github.com/keyu-tian/SparK/blob/main/encoder.py) to simulate submanifold sparse convolution by default.
+For generality, we use the masked convolution implemented in [encoder.py](https://github.com/keyu-tian/SparK/blob/main/pretrain/encoder.py) to simulate submanifold sparse convolution by default.
 <!--If `--sparse_conv=1` is not specified, this masked convolution would be used in pre-training.-->
 
 **For anyone who might want to run SparK on another architectures**:
