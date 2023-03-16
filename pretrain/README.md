@@ -7,11 +7,12 @@ See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to pre
 
 ## Pre-training on ImageNet-1k from scratch
 
-Run [main.sh](https://github.com/keyu-tian/SparK/blob/main/pretrain/main.sh).
+For pre-training, run [main.sh](https://github.com/keyu-tian/SparK/blob/main/pretrain/main.sh) with bash.
 
-It is **required** to specify ImageNet data folder and model name to run pre-training.
-Besides, you can pass arbitrary key-word arguments (like `--ep=400 --bs=2048`) to `main.sh` to specify some pre-training hyperparameters (see [utils/arg_utils.py](https://github.com/keyu-tian/SparK/blob/main/pretrain/utils/arg_utils.py) for all hyperparameters and their default values).
+Note that it is **required** to specify the ImageNet data folder (`--data_path`) and model name (`--model`) to run pre-training.
 
+For **all** other configurations/hyperparameters, their names and **default values** can be found in [utils/arg_util.py line24-47](https://github.com/keyu-tian/SparK/blob/main/pretrain/utils/arg_util.py#L24).
+If you do not specify them like `--ep=800`, those default configurations would be used.
 
 Here is an example command pre-training a ResNet50 on single machine with 8 GPUs:
 ```shell script
@@ -19,7 +20,7 @@ $ cd /path/to/SparK/pretrain
 $ bash ./main.sh <experiment_name> \
   --num_nodes=1 --ngpu_per_node=8 \
   --data_path=/path/to/imagenet \
-  --model=resnet50 --ep=1600 --bs=4096
+  --model=resnet50
 ```
 
 For multiple machines, change the `num_nodes` to your count and plus these args:
@@ -54,8 +55,22 @@ Add `--resume_from=path/to/<model>still_pretraining.pth` to resume from a saved 
 
 ## Regarding sparse convolution
 
-For generality, we use the masked convolution implemented in [encoder.py](https://github.com/keyu-tian/SparK/blob/main/pretrain/encoder.py) to simulate submanifold sparse convolution by default.
+We do not use sparse convolutions in this pytorch implementation, due to their limited optimization on modern hardwares.
+As can be found in [encoder.py](https://github.com/keyu-tian/SparK/blob/main/pretrain/encoder.py), we use masked dense convolution to simulate submanifold sparse convolution.
+We also define some sparse pooling or normalization layers in [encoder.py](https://github.com/keyu-tian/SparK/blob/main/pretrain/encoder.py).
+All these "sparse" layers are implemented through pytorch built-in operators.
 
-**For anyone who might want to run SparK on another architectures**:
-we recommend you to use the default masked convolution, 
-considering the limited optimization of sparse convolution on hardwares, and in particular the lack of efficient implementation of many modern operators like grouped conv and dilated conv.
+
+## Some details: how we mask images and how to set the patch size
+
+In SparK, the mask patch size **equals to** the downsample ratio of the CNN model (so there is no configuration like `--patch_size=32`).
+
+Here is the reason: when we do mask, we:
+
+1. first generate the binary mask for the **smallest** resolution feature map, i.e., generate the `_cur_active` or `active_b1ff` in [line86-87](https://github.com/keyu-tian/SparK/blob/main/pretrain/spark.py#L86), which is a `torch.BoolTensor` shaped as `[B, 1, fmap_size, fmap_size]`, and would be used to mask the smallest feature map.
+3. then progressively upsample it (i.e., expand its 2nd and 3rd dimensions by calling `repeat_interleave(..., 2)` and `repeat_interleave(..., 3)` in [line16](https://github.com/keyu-tian/SparK/blob/main/pretrain/encoder.py#L16)), to mask those feature maps ([`x` in line21](https://github.com/keyu-tian/SparK/blob/main/pretrain/encoder.py#L21)) with larger resolutions .
+
+So if you want a patch size of 16 or 8, you should actually define a new CNN model with a downsample ratio of 16 or 8.
+Note that the `forward` function of this CNN should have an arg named `hierarchy`. You can look at https://github.com/keyu-tian/SparK/blob/main/pretrain/models/convnext.py#L78 to see what `hierarchy` means and how to handle it.
+
+After that, you can simply run `main.sh` with `--hierarchy=3` and see if it works.
