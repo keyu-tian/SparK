@@ -1,0 +1,5 @@
+numpy
+Pillow
+typed-argument-parser
+timm==0.5.4
+tensorboardx

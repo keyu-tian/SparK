@@ -15,7 +15,7 @@ Besides, you can pass arbitrary key-word arguments (like `--ep=400 --bs=2048`) t
 
 Here is an example command pre-training a ResNet50 on single machine with 8 GPUs:
 ```shell script
-$ cd /path/to/SparK
+$ cd /path/to/SparK/pretrain
 $ bash ./main.sh <experiment_name> \
   --num_nodes=1 --ngpu_per_node=8 \
   --data_path=/path/to/imagenet \
