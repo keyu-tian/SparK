@@ -1,6 +1,7 @@
 # SparK: BERT/MAE-style Pretraining on Any Convolutional Networks [![Reddit](https://img.shields.io/badge/Reddit-🔥%20120k%20views-b31b1b.svg?style=social&logo=reddit)](https://www.reddit.com/r/MachineLearning/comments/10ix0l1/r_iclr2023_spotlight_the_first_bertstyle/) [![Twitter](https://img.shields.io/badge/Twitter-🔥%2020k%2B120k%20views-b31b1b.svg?style=social&logo=twitter)](https://twitter.com/keyutian/status/1616606179144380422)
 
-Implementation of the paper [Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling](https://arxiv.org/abs/2301.03580).
+Official implementation of the paper [Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling](https://arxiv.org/abs/2301.03580).
+We've tried our best to make this codebase clean, short, easy to read, state-of-the-art, and with minimal dependencies.
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/39692511/211496814-e6cb9243-833c-43d2-a859-d35afa96ed22.png" width=86% class="center">
