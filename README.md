@@ -1,36 +1,50 @@
-# SparK✨: The first successful BERT-style pre-training on any convolutional networks [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580), ICLR'23 Spotlight
+# SparK: The first successful BERT-style pre-training on any convolutional networks [![OpenReview](https://img.shields.io/badge/🔥%20ICLR'2023%20Spotlight-NRxydtWup1S-b31b1b.svg)](https://openreview.net/forum?id=NRxydtWup1S) [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
 
-Official implementation of "Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling".
-
+Official implementation of [Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling](https://arxiv.org/abs/2301.03580).
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/39692511/211496814-e6cb9243-833c-43d2-a859-d35afa96ed22.png" width=86% class="center">
 </p>
 
+
 <div align="center">
 
-  [[`arXiv`](https://arxiv.org/abs/2301.03580)]
-  [[`pdf`](https://arxiv.org/pdf/2301.03580.pdf)]
-  [[`state-of-the-art self-supervised convnet`](https://paperswithcode.com/sota/self-supervised-image-classification-on-1?tag_filter=17?p=designing-bert-for-convolutional-networks)]
-  [[`bibtex`](https://github.com/keyu-tian/SparK#citation)]
+  [![Reddit](https://img.shields.io/badge/Reddit-🔥%20120k%20views-b31b1b.svg?style=social&logo=reddit)](https://www.reddit.com/r/MachineLearning/comments/10ix0l1/r_iclr2023_spotlight_the_first_bertstyle/)&nbsp;
+  [![Twitter](https://img.shields.io/badge/Twitter-🔥%2020k%2B120k%20views-b31b1b.svg?style=social&logo=twitter)](https://twitter.com/keyutian/status/1616606179144380422)
 </div>
 
+
+
 <div align="center">
 
+  [![SOTA](https://img.shields.io/badge/State%20of%20the%20Art-Self--Supervised%20Image%20Classification%20on%20ImageNet%20%28CNN%29-32B1B4?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iNjA2IiBoZWlnaHQ9IjYwNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgb3ZlcmZsb3c9ImhpZGRlbiI%2BPGRlZnM%2BPGNsaXBQYXRoIGlkPSJjbGlwMCI%2BPHJlY3QgeD0iLTEiIHk9Ii0xIiB3aWR0aD0iNjA2IiBoZWlnaHQ9IjYwNiIvPjwvY2xpcFBhdGg%2BPC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEgMSkiPjxyZWN0IHg9IjUyOSIgeT0iNjYiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0NzMiIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSIxOSIgeT0iNjYiIHdpZHRoPSI1NyIgaGVpZ2h0PSI0NzMiIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSIyNzQiIHk9IjE1MSIgd2lkdGg9IjU3IiBoZWlnaHQ9IjMwMiIgZmlsbD0iIzQ0RjJGNiIvPjxyZWN0IHg9IjEwNCIgeT0iMTUxIiB3aWR0aD0iNTciIGhlaWdodD0iMzAyIiBmaWxsPSIjNDRGMkY2Ii8%2BPHJlY3QgeD0iNDQ0IiB5PSIxNTEiIHdpZHRoPSI1NyIgaGVpZ2h0PSIzMDIiIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSIzNTkiIHk9IjE3MCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjI2NCIgZmlsbD0iIzQ0RjJGNiIvPjxyZWN0IHg9IjE4OCIgeT0iMTcwIiB3aWR0aD0iNTciIGhlaWdodD0iMjY0IiBmaWxsPSIjNDRGMkY2Ii8%2BPHJlY3QgeD0iNzYiIHk9IjY2IiB3aWR0aD0iNDciIGhlaWdodD0iNTciIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSI0ODIiIHk9IjY2IiB3aWR0aD0iNDciIGhlaWdodD0iNTciIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSI3NiIgeT0iNDgyIiB3aWR0aD0iNDciIGhlaWdodD0iNTciIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSI0ODIiIHk9IjQ4MiIgd2lkdGg9IjQ3IiBoZWlnaHQ9IjU3IiBmaWxsPSIjNDRGMkY2Ii8%2BPC9nPjwvc3ZnPg%3D%3D)](https://paperswithcode.com/sota/self-supervised-image-classification-on-1?tag_filter=17&p=designing-bert-for-convolutional-networks)&nbsp;
+  [![OpenReview](https://img.shields.io/badge/ICLR'2023%20Spotlight-NRxydtWup1S-b31b1b.svg)](https://openreview.net/forum?id=NRxydtWup1S)&nbsp;
+  [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
+</div>
+  
+<!-- <div align="center"> -->
+<!--   [[`pdf`](https://arxiv.org/pdf/2301.03580.pdf)] -->
+<!--   [[`bibtex`](https://github.com/keyu-tian/SparK#citation)] -->
+<!-- </div> -->
+  
+<!--   [[`Bytedance`](https://mp.weixin.qq.com/s/Ak1CeeG83sgO0Wf8KgEIQQ)] -->
+
+<div align="center">
+  
+  [[`📹Talk @TechBeat(将门)`](https://www.techbeat.net/talk-info?id=758)]
   [[`ReadPaper`](https://readpaper.com/paper/4710371282714116097)]
-  [[`Synced`](https://syncedreview.com/2023/01/19/bert-style-pretraining-on-convnets-peking-u-bytedance-oxford-us-sparse-masked-modelling-with-hierarchy-leads-the-way/)]
-  [[`The Gradient`](https://thegradientpub.substack.com/p/update-42-ai-news-editors-make-mistakes)]
-  [[`QbitAI`](https://www.qbitai.com/2023/02/42109.html)]
-  [[`Bytedance`](https://mp.weixin.qq.com/s/Ak1CeeG83sgO0Wf8KgEIQQ)]
   [[`DeepAI`](https://deepai.org/publication/designing-bert-for-convolutional-networks-sparse-and-hierarchical-masked-modeling)]
-  [[`Reddit`](https://www.reddit.com/r/MachineLearning/comments/10ix0l1/r_iclr2023_spotlight_the_first_bertstyle/)]
-  [[`Twitter`](https://twitter.com/keyutian/status/1616606179144380422)]
+  [[`TheGradient`](https://thegradientpub.substack.com/p/update-42-ai-news-editors-make-mistakes)]
+  [[`CVer`](https://zhuanlan.zhihu.com/p/598056871)]
+  [[`Synced(机器之心)`](https://syncedreview.com/2023/01/19/bert-style-pretraining-on-convnets-peking-u-bytedance-oxford-us-sparse-masked-modelling-with-hierarchy-leads-the-way/)]
+  [[`QbitAI(量子位)`](https://www.qbitai.com/2023/02/42109.html)]
+  [[`BAAI(智源)`](https://hub.baai.ac.cn/view/23360)]
 </div>
 
 ## 🔥 News
 
-- The share on [TechBeat (将门创投)](https://www.techbeat.net/talk-info?id=758) is scheduled on **Mar. 16th (UTC+0 12am, UTC+8 8pm)** too! [[`Recorded Video`](https://www.techbeat.net/talk-info?id=758)]
-- We are honored to be invited by Synced ("机器之心机动组 视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am, UTC+8 7pm)**, welcome! [[`Recorded Video`](https://www.bilibili.com/video/BV1J54y1u7U3/)]
+- The share on [TechBeat (将门创投)](https://www.techbeat.net/talk-info?id=758) is scheduled on **Mar. 16th (UTC+0 12am, UTC+8 8pm)** too! [[`📹Recorded Video`](https://www.techbeat.net/talk-info?id=758)]
+- We are honored to be invited by Synced ("机器之心机动组 视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am, UTC+8 7pm)**, welcome! [[`📹Recorded Video`](https://www.bilibili.com/video/BV1J54y1u7U3/)]
 - This work got accepted to ICLR 2023 as a Spotlight (notable-top-25%).
 
 
@@ -116,15 +130,8 @@ See [PRETRAIN.md](PRETRAIN.md) to pre-train models on ImageNet-1k.
 
 We referred to these useful codebases:
 
-- [BEiT](https://github.com/microsoft/unilm/tree/master/beit)
-- [MAE](https://github.com/facebookresearch/mae)
-- [ConvNeXt](https://github.com/facebookresearch/ConvNeXt)
-
-We also appreciate these elegant frameworks:
-
-- [timm](https://github.com/rwightman/pytorch-image-models)
-- [MoCoV2](https://github.com/facebookresearch/moco)
-- [Detectron2](https://github.com/facebookresearch/detectron2) and [MMDetection](https://github.com/open-mmlab/mmdetection)
+- [BEiT](https://github.com/microsoft/unilm/tree/master/beit), [MAE](https://github.com/facebookresearch/mae), [ConvNeXt](https://github.com/facebookresearch/ConvNeXt)
+- [timm](https://github.com/rwightman/pytorch-image-models), [MoCoV2](https://github.com/facebookresearch/moco), [Detectron2](https://github.com/facebookresearch/detectron2), [MMDetection](https://github.com/open-mmlab/mmdetection)
 
 
 
@@ -134,7 +141,7 @@ This project is under the MIT license. See [LICENSE](LICENSE) for more details.
 
 ## Citation
 
-If you found this project useful, please consider adding a star ⭐, or citing us 📖:
+If you found this project useful, you may consider staring ⭐, or citing us 📖:
 ```
 @Article{tian2023designing,
   author  = {Keyu Tian and Yi Jiang and Qishuai Diao and Chen Lin and Liwei Wang and Zehuan Yuan},
