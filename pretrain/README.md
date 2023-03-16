@@ -1,4 +1,4 @@
-## Preparation for ImageNet-1k fine-tuning
+## Preparation for ImageNet-1k pre-training
 
 See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to prepare `pip` dependencies and the ImageNet dataset.
 
@@ -7,7 +7,7 @@ See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to pre
 
 ## Pre-training on ImageNet-1k from scratch
 
-Run [main.sh](https://github.com/keyu-tian/SparK/blob/main/main.sh).
+Run [main.sh](https://github.com/keyu-tian/SparK/blob/main/pretrain/main.sh).
 
 It is **required** to specify ImageNet data folder and model name to run pre-training.
 Besides, you can pass arbitrary key-word arguments (like `--ep=400 --bs=2048`) to `main.sh` to specify some pre-training hyperparameters (see [utils/arg_utils.py](https://github.com/keyu-tian/SparK/blob/main/pretrain/utils/arg_utils.py) for all hyperparameters and their default values).
@@ -55,7 +55,6 @@ Add `--resume_from=path/to/<model>still_pretraining.pth` to resume from a saved 
 ## Regarding sparse convolution
 
 For generality, we use the masked convolution implemented in [encoder.py](https://github.com/keyu-tian/SparK/blob/main/pretrain/encoder.py) to simulate submanifold sparse convolution by default.
-<!--If `--sparse_conv=1` is not specified, this masked convolution would be used in pre-training.-->
 
 **For anyone who might want to run SparK on another architectures**:
 we recommend you to use the default masked convolution, 
