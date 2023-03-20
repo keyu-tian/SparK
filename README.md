@@ -9,11 +9,11 @@ We've tried our best to make the codebase clean, short, easy to read, state-of-t
 
 <div align="center">
 
-  [![SOTA](https://img.shields.io/badge/State%20of%20the%20Art-Self--Supervised%20Image%20Classification%20on%20ImageNet%20%28CNN%29-32B1B4?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iNjA2IiBoZWlnaHQ9IjYwNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgb3ZlcmZsb3c9ImhpZGRlbiI%2BPGRlZnM%2BPGNsaXBQYXRoIGlkPSJjbGlwMCI%2BPHJlY3QgeD0iLTEiIHk9Ii0xIiB3aWR0aD0iNjA2IiBoZWlnaHQ9IjYwNiIvPjwvY2xpcFBhdGg%2BPC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEgMSkiPjxyZWN0IHg9IjUyOSIgeT0iNjYiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0NzMiIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSIxOSIgeT0iNjYiIHdpZHRoPSI1NyIgaGVpZ2h0PSI0NzMiIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSIyNzQiIHk9IjE1MSIgd2lkdGg9IjU3IiBoZWlnaHQ9IjMwMiIgZmlsbD0iIzQ0RjJGNiIvPjxyZWN0IHg9IjEwNCIgeT0iMTUxIiB3aWR0aD0iNTciIGhlaWdodD0iMzAyIiBmaWxsPSIjNDRGMkY2Ii8%2BPHJlY3QgeD0iNDQ0IiB5PSIxNTEiIHdpZHRoPSI1NyIgaGVpZ2h0PSIzMDIiIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSIzNTkiIHk9IjE3MCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjI2NCIgZmlsbD0iIzQ0RjJGNiIvPjxyZWN0IHg9IjE4OCIgeT0iMTcwIiB3aWR0aD0iNTciIGhlaWdodD0iMjY0IiBmaWxsPSIjNDRGMkY2Ii8%2BPHJlY3QgeD0iNzYiIHk9IjY2IiB3aWR0aD0iNDciIGhlaWdodD0iNTciIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSI0ODIiIHk9IjY2IiB3aWR0aD0iNDciIGhlaWdodD0iNTciIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSI3NiIgeT0iNDgyIiB3aWR0aD0iNDciIGhlaWdodD0iNTciIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSI0ODIiIHk9IjQ4MiIgd2lkdGg9IjQ3IiBoZWlnaHQ9IjU3IiBmaWxsPSIjNDRGMkY2Ii8%2BPC9nPjwvc3ZnPg%3D%3D)](https://paperswithcode.com/sota/self-supervised-image-classification-on-1?tag_filter=17&p=designing-bert-for-convolutional-networks)&nbsp;
-  [![OpenReview](https://img.shields.io/badge/ICLR'2023%20Spotlight-NRxydtWup1S-b31b1b.svg)](https://openreview.net/forum?id=NRxydtWup1S)&nbsp;
-  [![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
+[![SOTA](https://img.shields.io/badge/State%20of%20the%20Art-Self--Supervised%20Image%20Classification%20on%20ImageNet%20%28CNN%29-32B1B4?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iNjA2IiBoZWlnaHQ9IjYwNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgb3ZlcmZsb3c9ImhpZGRlbiI%2BPGRlZnM%2BPGNsaXBQYXRoIGlkPSJjbGlwMCI%2BPHJlY3QgeD0iLTEiIHk9Ii0xIiB3aWR0aD0iNjA2IiBoZWlnaHQ9IjYwNiIvPjwvY2xpcFBhdGg%2BPC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEgMSkiPjxyZWN0IHg9IjUyOSIgeT0iNjYiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0NzMiIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSIxOSIgeT0iNjYiIHdpZHRoPSI1NyIgaGVpZ2h0PSI0NzMiIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSIyNzQiIHk9IjE1MSIgd2lkdGg9IjU3IiBoZWlnaHQ9IjMwMiIgZmlsbD0iIzQ0RjJGNiIvPjxyZWN0IHg9IjEwNCIgeT0iMTUxIiB3aWR0aD0iNTciIGhlaWdodD0iMzAyIiBmaWxsPSIjNDRGMkY2Ii8%2BPHJlY3QgeD0iNDQ0IiB5PSIxNTEiIHdpZHRoPSI1NyIgaGVpZ2h0PSIzMDIiIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSIzNTkiIHk9IjE3MCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjI2NCIgZmlsbD0iIzQ0RjJGNiIvPjxyZWN0IHg9IjE4OCIgeT0iMTcwIiB3aWR0aD0iNTciIGhlaWdodD0iMjY0IiBmaWxsPSIjNDRGMkY2Ii8%2BPHJlY3QgeD0iNzYiIHk9IjY2IiB3aWR0aD0iNDciIGhlaWdodD0iNTciIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSI0ODIiIHk9IjY2IiB3aWR0aD0iNDciIGhlaWdodD0iNTciIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSI3NiIgeT0iNDgyIiB3aWR0aD0iNDciIGhlaWdodD0iNTciIGZpbGw9IiM0NEYyRjYiLz48cmVjdCB4PSI0ODIiIHk9IjQ4MiIgd2lkdGg9IjQ3IiBoZWlnaHQ9IjU3IiBmaWxsPSIjNDRGMkY2Ii8%2BPC9nPjwvc3ZnPg%3D%3D)](https://paperswithcode.com/sota/self-supervised-image-classification-on-1?tag_filter=17&p=designing-bert-for-convolutional-networks)&nbsp;
+[![OpenReview](https://img.shields.io/badge/ICLR'2023%20Spotlight-NRxydtWup1S-b31b1b.svg)](https://openreview.net/forum?id=NRxydtWup1S)&nbsp;
+[![arXiv](https://img.shields.io/badge/arXiv-2301.03580-b31b1b.svg)](https://arxiv.org/abs/2301.03580)
 </div>
-  
+
 <!-- <div align="center"> -->
 <!--   [[`pdf`](https://arxiv.org/pdf/2301.03580.pdf)] -->
 <!--   [[`bibtex`](https://github.com/keyu-tian/SparK#citation)] -->
@@ -39,6 +39,16 @@ We've tried our best to make the codebase clean, short, easy to read, state-of-t
 ## 📺 Video demo
 
 https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8235-e8907fd81e0e.mp4
+
+## 🕹️ CoLab Visualization Demo
+
+Check [pretrain/viz_reconstruction.ipynb](pretrain/viz_reconstruction.ipynb) which visualizes the reconstruction of SparK pre-trained models, like:
+
+
+<p align="center">
+<img src="https://user-images.githubusercontent.com/39692511/226376648-3f28a1a6-275d-4f88-8f3e-cd1219882488.png" width=60%>
+<p>
+
 
 ## What's new here?
 
@@ -75,12 +85,12 @@ https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8
 
 - [x] Pre-training code
 - [x] Fine-tuning code
-- [ ] Colab visualization playground
+- [x] Colab visualization playground
 - [ ] Weights & visualization playground on `Huggingface`
 - [ ] Weights in `timm`
 
 
-## ImageNet-1k results and pre-trained networks weights
+## Pre-trained weights
 
 **Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
 `reso.`: the image resolution; `acc@1`: IN1k fine-tuned acc (top-1)
@@ -100,22 +110,17 @@ https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8
 
 
 
-## Installation
+## Installation & Running
 
-For pre-training and fine-tuning on ImageNet-1k, we highly recommended you to use `torch==1.10.0`, `torchvision==0.11.1`, and `timm==0.5.4`.
+We highly recommended you to use `torch==1.10.0`, `torchvision==0.11.1`, and `timm==0.5.4` for reproduction.
+Check [INSTALL.md](INSTALL.md) to install all pip dependencies.
 
-Check [INSTALL.md](INSTALL.md) to install all dependencies for pre-training and ImageNet fine-tuning.
+- **Pre-training** all models on ImageNet-1k: see [pretrain/](pretrain)
 
-## Pre-training
-
-See [pretrain/](pretrain) to pre-train models on ImageNet-1k.
-
-
-## Fine-tuning
-
-- All models on ImageNet: check [downstream_imagenet/](downstream_imagenet) for subsequent instructions.
-- ResNets on COCO: see [downstream_d2/](downstream_d2) for details.
-- ConvNeXts on COCO: see [downstream_mmdet/](downstream_mmdet) for details.
+- **Fine-tuning**
+  - all models on ImageNet: check [downstream_imagenet/](downstream_imagenet) for subsequent instructions.
+  - ResNets on COCO: see [downstream_d2/](downstream_d2)
+  - ConvNeXts on COCO: see [downstream_mmdet/](downstream_mmdet)
 
 
 ## Acknowledgement
