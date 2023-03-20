@@ -49,6 +49,8 @@ Check [pretrain/viz_reconstruction.ipynb](pretrain/viz_reconstruction.ipynb) whi
 <img src="https://user-images.githubusercontent.com/39692511/226376648-3f28a1a6-275d-4f88-8f3e-cd1219882488.png" width=60%>
 <p>
 
+We also provide [pretrain/viz_reconstruction.ipynb](pretrain/viz_spconv.ipynb) that shows the "mask pattern vanishing" issue of dense conv layers.
+
 
 ## What's new here?
 
@@ -85,7 +87,7 @@ Check [pretrain/viz_reconstruction.ipynb](pretrain/viz_reconstruction.ipynb) whi
 
 - [x] Pre-training code
 - [x] Fine-tuning code
-- [x] Colab visualization playground
+- [x] Colab visualization playground ([reconstruction](/pretrain/viz_reconstruction.ipynb), [sparse conv](pretrain/viz_spconv.ipynb))
 - [ ] Weights & visualization playground on `Huggingface`
 - [ ] Weights in `timm`
 
@@ -93,6 +95,7 @@ Check [pretrain/viz_reconstruction.ipynb](pretrain/viz_reconstruction.ipynb) whi
 ## Pre-trained weights
 
 **Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
+
 `reso.`: the image resolution; `acc@1`: IN1k fine-tuned acc (top-1)
 
 
