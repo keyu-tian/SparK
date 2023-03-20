@@ -12,14 +12,15 @@ from tap import Tap
 
 HP_DEFAULT_NAMES = ['bs', 'ep', 'wp_ep', 'opt', 'base_lr', 'lr_scale', 'wd', 'mixup', 'rep_aug', 'drop_path', 'ema']
 HP_DEFAULT_VALUES = {
-    'convnext_small': (4096, 400, 20, 'adam', 0.0002, 0.7, 0.01, 0.8, 3, 0.3,  0.9999),
-    'convnext_base':  (4096, 400, 20, 'adam', 0.0001, 0.7, 0.01, 0.8, 3, 0.4,  0.9999),
-    'convnext_large': (4096, 200, 10, 'adam', 0.0001, 0.7, 0.02, 0.8, 3, 0.5,  0.9999),
+    'convnext_small':     (4096, 400, 20, 'adam', 0.0002,  0.7, 0.01, 0.8, 3, 0.3,  0.9999),
+    'convnext_base':      (4096, 400, 20, 'adam', 0.0001,  0.7, 0.01, 0.8, 3, 0.4,  0.9999),
+    'convnext_large':     (4096, 200, 10, 'adam', 0.0001,  0.7, 0.02, 0.8, 3, 0.5,  0.9999),
+    'convnext_large_384': (1024, 200, 20, 'adam', 0.00006, 0.7, 0.01, 0.8, 3, 0.5,  0.99995),
     
-    'resnet50':       (4096, 300, 5,  'lamb', 0.002,  0.7, 0.02, 0.1, 0, 0.05, 0.9999),
-    'resnet101':      (4096, 300, 5,  'lamb', 0.001,  0.8, 0.02, 0.1, 0, 0.2,  0.9999),
-    'resnet152':      (4096, 300, 5,  'lamb', 0.001,  0.8, 0.02, 0.1, 0, 0.2,  0.9999),
-    'resnet200':      (4096, 300, 5,  'lamb', 0.001,  0.8, 0.02, 0.1, 0, 0.2,  0.9999),
+    'resnet50':           (4096, 300, 5,  'lamb', 0.002,   0.7, 0.02, 0.1, 0, 0.05, 0.9999),
+    'resnet101':          (4096, 300, 5,  'lamb', 0.001,   0.8, 0.02, 0.1, 0, 0.2,  0.9999),
+    'resnet152':          (4096, 300, 5,  'lamb', 0.001,   0.8, 0.02, 0.1, 0, 0.2,  0.9999),
+    'resnet200':          (4096, 300, 5,  'lamb', 0.001,   0.8, 0.02, 0.1, 0, 0.2,  0.9999),
 }
 
 
@@ -116,11 +117,14 @@ def get_args(world_size, global_rank, local_rank, device) -> FineTuneArgs:
     try: os.makedirs(args.tb_lg_dir, exist_ok=True)
     except: pass
     
-    # update args.bs, args.ep, etc. (if their values are like 0.0 or 0 or '')
-    for k, v in zip(HP_DEFAULT_NAMES, HP_DEFAULT_VALUES[args.model]):
-        if not bool(getattr(args, k)):
+    # fill in args.bs, args.ep, etc. with their default values (if their values are not explicitly specified, i.e., if bool(they) == False)
+    if args.model == 'convnext_large' and args.img_size == 384:
+        default_values = HP_DEFAULT_VALUES['convnext_large_384']
+    else:
+        default_values = HP_DEFAULT_VALUES[args.model]
+    for k, v in zip(HP_DEFAULT_NAMES, default_values):
+        if bool(getattr(args, k)) == False:
             setattr(args, k, v)
-    args.ema = args.ema or 0.9999
     
     # update other runtime args
     args.world_size, args.global_rank, args.local_rank, args.device = world_size, global_rank, local_rank, device

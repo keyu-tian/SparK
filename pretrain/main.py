@@ -136,7 +136,7 @@ def pre_train_one_ep(ep, args: arg_util.Args, tb_lg: misc.TensorboardLogger, itr
         # forward and backward
         inp = inp.to(args.device, non_blocking=True)
         SparK.forward
-        _, _, loss = model(inp)
+        loss = model(inp, active_b1ff=None, vis=False)
         optimizer.zero_grad()
         loss.backward()
         loss = loss.item()

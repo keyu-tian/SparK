@@ -82,16 +82,20 @@ https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8
 ## ImageNet-1k results and pre-trained networks weights
 
 **Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
+`reso.`: the image resolution; `acc@1`: IN1k fine-tuned acc (top-1)
 
-| arch. | acc@1 | #params | flops | model |
-|:---:|:---:|:---:|:---:|:---:|
-| ResNet50   | 80.6 | 26M  | 4.1G | [drive](https://drive.google.com/file/d/1H8605HbxGvrsu4x4rIoNr-Wkd7JkxFPQ/view?usp=share_link) |
-| ResNet101  | 82.2 | 45M  | 7.9G | [drive](https://drive.google.com/file/d/1ZwTztjU-_rfvOVfLoce9SMw2Fx0DQfoO/view?usp=share_link) |
-| ResNet152  | 82.7 | 60M | 11.6G | [drive](https://drive.google.com/file/d/1FOVuECnzQAI-OzE-hnrqW7tVpg8kTziM/view?usp=share_link) |
-| ResNet200  | 83.1 | 65M | 15.1G | [drive](https://drive.google.com/file/d/1_Q4e30qqhjchrdyW3fT6P98Ga-WnQ57s/view?usp=share_link) |
-| ConvNeXt-S | 84.1 | 50M  | 8.7G | [drive](https://drive.google.com/file/d/1Ah6lgDY5YDNXoXHQHklKKMbEd08RYivN/view?usp=share_link) |
-| ConvNeXt-B | 84.8 | 89M  | 15.4G | [drive](https://drive.google.com/file/d/1ZjWbqI1qoBcqeQijI5xX9E-YNkxpJcYV/view?usp=share_link) |
-| ConvNeXt-L | 85.4 | 198M | 34.4G | [drive](https://drive.google.com/file/d/1qfYzGUpYBzuA88_kXkVl4KNUwfutMVfw/view?usp=share_link) |
+
+|     arch.      | reso. | acc@1 | #params | flops  | weights on google drive                                                                                                                   |
+|:--------------:|:-----:|:-----:|:-------:|:------:|:------------------------------------------------------------------------------------------------------------------------------------------|
+|    ResNet50    |  224  | 80.6  |   26M   |  4.1G  | [resnet50_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1H8605HbxGvrsu4x4rIoNr-Wkd7JkxFPQ/view?usp=share_link)             |
+|   ResNet101    |  224  | 82.2  |   45M   |  7.9G  | [resnet101_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1ZwTztjU-_rfvOVfLoce9SMw2Fx0DQfoO/view?usp=share_link)            |
+|   ResNet152    |  224  | 82.7  |   60M   | 11.6G  | [resnet152_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1FOVuECnzQAI-OzE-hnrqW7tVpg8kTziM/view?usp=share_link)            |
+|   ResNet200    |  224  | 83.1  |   65M   | 15.1G  | [resnet200_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1_Q4e30qqhjchrdyW3fT6P98Ga-WnQ57s/view?usp=share_link)            |
+|   ConvNeXt-S   |  224  | 84.1  |   50M   |  8.7G  | [convnextS_1kpretrained_official_style.pth](https://drive.google.com/file/d/1Ah6lgDY5YDNXoXHQHklKKMbEd08RYivN/view?usp=share_link)        |
+|   ConvNeXt-B   |  224  | 84.8  |   89M   | 15.4G  | [convnextB_1kpretrained_official_style.pth](https://drive.google.com/file/d/1ZjWbqI1qoBcqeQijI5xX9E-YNkxpJcYV/view?usp=share_link)        |
+|   ConvNeXt-L   |  224  | 85.4  |  198M   | 34.4G  | [convnextL_1kpretrained_official_style.pth](https://drive.google.com/file/d/1qfYzGUpYBzuA88_kXkVl4KNUwfutMVfw/view?usp=share_link)        |
+|   ConvNeXt-L   |  384  | 86.0  |  198M   | 101.0G | [convnextL_384_1kpretrained_official_style.pth](https://drive.google.com/file/d/1YgWNXJjI89l35P4ksAmBNWZ2JZCpj9n4/view?usp=share_link)    |
+| L-with-decoder |  384  | 86.0  |  198M   | 101.0G | [cnxL384_withdecoder_1kpretrained_spark_style.pth](https://drive.google.com/file/d/1ZI9Jgtb3fKWE_vDFEly29w-1FWZSNwa0/view?usp=share_link) |
 
 
 

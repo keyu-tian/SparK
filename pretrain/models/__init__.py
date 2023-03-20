@@ -63,5 +63,5 @@ def build_sparse_encoder(name: str, input_size: int, sbn=False, drop_path_rate=0
     kwargs, params, flops, downsample_raito, fea_dim = pre_train_d[name]
     if drop_path_rate != 0:
         kwargs['drop_path_rate'] = drop_path_rate
-    print(f'[sparse_cnn] model kwargs={kwargs}')
+    print(f'[build_sparse_encoder] model kwargs={kwargs}')
     return SparseEncoder(create_model(name, **kwargs), input_size=input_size, downsample_raito=downsample_raito, encoder_fea_dim=fea_dim, sbn=sbn, verbose=verbose)

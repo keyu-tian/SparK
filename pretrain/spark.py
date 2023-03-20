@@ -52,11 +52,11 @@ class SparK(nn.Module):
             
             if i == 0 and e_width == d_width:
                 densify_proj = nn.Identity()    # todo: NOTE THAT CONVNEXT-S WOULD USE THIS, because it has a width of 768 that equals to the decoder's width 768
-                print(f'[mid, py={self.hierarchy}][densify {i} proj]: use nn.Identity()')
+                print(f'[SparK.__init__, densify {i+1}/{self.hierarchy}]: use nn.Identity() as densify_proj')
             else:
                 kernel_size = 1 if i <= 0 else 3
                 densify_proj = nn.Conv2d(e_width, d_width, kernel_size=kernel_size, stride=1, padding=kernel_size // 2, bias=True)
-                print(f'[mid, py={self.hierarchy}][densify {i} proj]: k={kernel_size}, #para = {sum(x.numel() for x in densify_proj.parameters()) / 1e6:.2f}')
+                print(f'[SparK.__init__, densify {i+1}/{self.hierarchy}]: densify_proj(ksz={kernel_size}, #para={sum(x.numel() for x in densify_proj.parameters()) / 1e6:.2f}M)')
             self.densify_projs.append(densify_proj)
             
             p = nn.Parameter(torch.zeros(1, e_width, 1, 1))
@@ -65,7 +65,7 @@ class SparK(nn.Module):
             e_width //= 2
             d_width //= 2
         
-        print(f'[mid, py={self.hierarchy}][mask_tokens]: {tuple(p.numel() for p in self.mask_tokens)}')
+        print(f'[SparK.__init__] dims of mask_tokens={tuple(p.numel() for p in self.mask_tokens)}')
         
         m = torch.tensor(IMAGENET_DEFAULT_MEAN).view(1, 3, 1, 1)
         s = torch.tensor(IMAGENET_DEFAULT_STD).view(1, 3, 1, 1)
@@ -80,9 +80,9 @@ class SparK(nn.Module):
         idx = idx[:, :self.len_keep].to(device)  # (B, len_keep)
         return torch.zeros(B, f * f, dtype=torch.bool, device=device).scatter_(dim=1, index=idx, value=True).view(B, 1, f, f)
     
-    def forward(self, inp_bchw: torch.Tensor, active_b1ff=None):
+    def forward(self, inp_bchw: torch.Tensor, active_b1ff=None, vis=False):
         # step1. Mask
-        if active_b1ff is None:
+        if active_b1ff is None:     # rand mask
             active_b1ff: torch.BoolTensor = self.mask(inp_bchw.shape[0], inp_bchw.device)  # (B, 1, f, f)
         encoder._cur_active = active_b1ff    # (B, 1, f, f)
         active_b1hw = active_b1ff.repeat_interleave(self.downsample_raito, 2).repeat_interleave(self.downsample_raito, 3)  # (B, 1, H, W)
@@ -106,20 +106,22 @@ class SparK(nn.Module):
         
         # step4. Decode and reconstruct
         rec_bchw = self.dense_decoder(to_dec)
-        recon_loss = self.reconstruction_loss(inp_bchw, rec_bchw, active_b1ff)
-        
-        return active_b1hw, rec_bchw, recon_loss
-    
-    def reconstruction_loss(self, inp, rec, active):  # active: (B, 1, f, f)
-        inp, rec = self.patchify(inp), self.patchify(rec)   # inp and rec: (B, L = f*f, N = C*downsample_raito**2)
+        inp, rec = self.patchify(inp_bchw), self.patchify(rec_bchw)   # inp and rec: (B, L = f*f, N = C*downsample_raito**2)
         mean = inp.mean(dim=-1, keepdim=True)
         var = (inp.var(dim=-1, keepdim=True) + 1e-6) ** .5
         inp = (inp - mean) / var
-        loss_spa = (rec - inp) ** 2
+        l2_loss = ((rec - inp) ** 2).mean(dim=2, keepdim=False)    # (B, L, C) ==mean==> (B, L)
         
-        loss_spa = loss_spa.mean(dim=2, keepdim=False)  # (B, L, C) => (B, L)
-        non_active = active.logical_not().int().view(active.shape[0], -1)  # (B, 1, f, f) => (B, L)
-        return loss_spa.mul_(non_active).sum() / (non_active.sum() + 1e-8)  # only on removed patches
+        non_active = active_b1ff.logical_not().int().view(active_b1ff.shape[0], -1)  # (B, 1, f, f) => (B, L)
+        recon_loss = l2_loss.mul_(non_active).sum() / (non_active.sum() + 1e-8)  # loss only on masked (non-active) patches
+        
+        if vis:
+            masked_bchw = inp_bchw * active_b1hw
+            rec_bchw = self.unpatchify(rec * var + mean)
+            rec_or_inp = torch.where(active_b1hw, inp_bchw, rec_bchw)
+            return [self.denorm_for_vis(i) for i in (inp_bchw, masked_bchw, rec_or_inp)]
+        else:
+            return recon_loss
     
     def patchify(self, bchw):
         p = self.downsample_raito
@@ -150,13 +152,13 @@ class SparK(nn.Module):
         return {
             # self
             'mask_ratio': self.mask_ratio,
-            'en_de_norm': self.densify_norm_str,
+            'densify_norm_str': self.densify_norm_str,
             'sbn': self.sbn, 'hierarchy': self.hierarchy,
             
             # enc
-            'input_size': self.sparse_encoder.input_size,
+            'sparse_encoder.input_size': self.sparse_encoder.input_size,
             # dec
-            'dec_fea_dim': self.dense_decoder.width,
+            'dense_decoder.width': self.dense_decoder.width,
         }
     
     def state_dict(self, destination=None, prefix='', keep_vars=False, with_config=False):

@@ -13,9 +13,8 @@ See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to pre
 ## Fine-tuning on ImageNet-1k from pre-trained weights
 
 Run [downstream_imagenet/main.sh](https://github.com/keyu-tian/SparK/blob/main/downstream_imagenet/main.sh).
-
-It is **required** to specify ImageNet data folder, model name, and checkpoint file path to run fine-tuning.
-All the other arguments have their default values, listed in [downstream_imagenet/arg.py#L13](https://github.com/keyu-tian/SparK/blob/main/downstream_imagenet/arg.py#L13).
+It is **required** to specify your experiment_name `<experiment_name>` ImageNet data folder `--data_path`, model name `--model`, and checkpoint file path `--resume_from` to run fine-tuning.
+All the other configurations have their default values, listed in [downstream_imagenet/arg.py#L13](https://github.com/keyu-tian/SparK/blob/main/downstream_imagenet/arg.py#L13).
 You can override any defaults by passing key-word arguments (like `--bs=2048`) to `main.sh`.
 
 

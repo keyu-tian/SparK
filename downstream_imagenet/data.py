@@ -39,17 +39,17 @@ def create_classification_dataset(data_path, img_size, rep_aug, workers, batch_s
         auto_augment='v0', interpolation='bicubic', re_prob=0.25, re_mode='pixel', re_count=1,
         mean=mean, std=std,
     )
-    for i, t in enumerate(trans_train.transforms):
-        if isinstance(t, (TorchAutoAugment, TimmAutoAugment)):
-            trans_train.transforms[i] = TrivialAugmentWide(interpolation=interpolation)
-            break
-    if img_size >= 384:
+    if img_size < 384:
+        for i, t in enumerate(trans_train.transforms):
+            if isinstance(t, (TorchAutoAugment, TimmAutoAugment)):
+                trans_train.transforms[i] = TrivialAugmentWide(interpolation=interpolation)
+                break
+        trans_val = transforms_imagenet_eval(img_size=img_size, interpolation='bicubic', crop_pct=0.95, mean=mean, std=std)
+    else:
         trans_val = transforms.Compose([
             transforms.Resize((img_size, img_size), interpolation=interpolation),
             transforms.ToTensor(), transforms.Normalize(mean=mean, std=std),
         ])
-    else:
-        trans_val = transforms_imagenet_eval(img_size=img_size, interpolation='bicubic', crop_pct=0.95, mean=mean, std=std)
     print_transform(trans_train, '[train]')
     print_transform(trans_val, '[val]')
     

@@ -5,14 +5,14 @@ See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to pre
 **Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
 
 
-## Pre-training on ImageNet-1k from scratch
+## Pre-training Any Model on ImageNet-1k (224x224)
 
 For pre-training, run [main.sh](https://github.com/keyu-tian/SparK/blob/main/pretrain/main.sh) with bash.
+It is **required** to specify the ImageNet data folder (`--data_path`), the model name (`--model`), and your experiment name (the first argument of `main.sh`) when running the script.
 
-Note that it is **required** to specify the ImageNet data folder (`--data_path`) and model name (`--model`) to run pre-training.
-
-For **all** other configurations/hyperparameters, their names and **default values** can be found in [utils/arg_util.py line24-47](https://github.com/keyu-tian/SparK/blob/main/pretrain/utils/arg_util.py#L24).
-If you do not specify them like `--ep=800`, those default configurations would be used.
+We use the **same** pre-training configurations (lr, batch size, etc.) for all models (ResNets and ConvNeXts).
+Their names and **default values** can be found in [utils/arg_util.py line24-47](https://github.com/keyu-tian/SparK/blob/main/pretrain/utils/arg_util.py#L24).
+These default configurations (like batch size 4096) would be used, unless you specify some like `--bs=512`.
 
 Here is an example command pre-training a ResNet50 on single machine with 8 GPUs:
 ```shell script
@@ -20,16 +20,29 @@ $ cd /path/to/SparK/pretrain
 $ bash ./main.sh <experiment_name> \
   --num_nodes=1 --ngpu_per_node=8 \
   --data_path=/path/to/imagenet \
-  --model=resnet50
+  --model=resnet50 --bs=512
 ```
 
-For multiple machines, change the `num_nodes` to your count and plus these args:
+For multiple machines, change the `--num_nodes` to your count, and plus these args:
 ```shell script
 --node_rank=<rank_starts_from_0> --master_address=<some_address> --master_port=<some_port>
 ```
 
-Note that the first argument `<experiment_name>` is the name of your experiment, which would be used to create an output directory named `output_<experiment_name>`.
+Note the `<experiment_name>` is the name of your experiment, which would be used to create an output directory named `output_<experiment_name>`.
 
+
+## Pre-training ConvNeXt-Large on ImageNet-1k (384x384)
+
+For pre-training with resolution 384, we use a larger mask ratio (0.75), a smaller batch size (2048), and a larger learning rate (4e-4):
+
+```shell script
+$ cd /path/to/SparK/pretrain
+$ bash ./main.sh <experiment_name> \
+--num_nodes=8 --ngpu_per_node=8 --node_rank=... --master_address=... --master_port=... \
+--data_path=/path/to/imagenet \
+--model=convnext_large --input_size=384 --mask=0.75 \
+ --bs=2048 --base_lr=4e-4
+```
 
 ## Logging
 
