@@ -49,7 +49,7 @@ Check [pretrain/viz_reconstruction.ipynb](pretrain/viz_reconstruction.ipynb) whi
 <img src="https://user-images.githubusercontent.com/39692511/226376648-3f28a1a6-275d-4f88-8f3e-cd1219882488.png" width=60%>
 <p>
 
-We also provide [pretrain/viz_reconstruction.ipynb](pretrain/viz_spconv.ipynb) that shows the "mask pattern vanishing" issue of dense conv layers.
+We also provide [pretrain/viz_spconv.ipynb](pretrain/viz_spconv.ipynb) that shows the "mask pattern vanishing" issue of dense conv layers.
 
 
 ## What's new here?
