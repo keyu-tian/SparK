@@ -1,11 +1,15 @@
 # SparK: the first successful BERT/MAE-style pretraining on *any* convolutional networks &nbsp;[![Reddit](https://img.shields.io/badge/Reddit-🔥%20120k%20views-b31b1b.svg?style=social&logo=reddit)](https://www.reddit.com/r/MachineLearning/comments/10ix0l1/r_iclr2023_spotlight_the_first_bertstyle/) [![Twitter](https://img.shields.io/badge/Twitter-🔥%2020k%2B120k%20views-b31b1b.svg?style=social&logo=twitter)](https://twitter.com/keyutian/status/1616606179144380422)
 
-This is the official implementation of ICLR paper [Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling](https://arxiv.org/abs/2301.03580), which can pre-train **any CNN** (e.g., ResNet) in a **BERT-style self-supervised** manner.
+This is the official implementation of ICLR paper [Designing BERT for Convolutional Networks: ***Spar***se and Hierarchical Mas***k***ed Modeling](https://arxiv.org/abs/2301.03580), which can pretrain **any CNN** (e.g., ResNet) in a **BERT-style self-supervised** manner.
 We've tried our best to make the codebase clean, short, easy to read, state-of-the-art, and only rely on minimal dependencies.
 
-<p align="center">
-<img src="https://user-images.githubusercontent.com/39692511/211496814-e6cb9243-833c-43d2-a859-d35afa96ed22.png" width=86% class="center">
-</p>
+<!-- <p align="center"> -->
+<!-- <img src="https://user-images.githubusercontent.com/39692511/211496814-e6cb9243-833c-43d2-a859-d35afa96ed22.png" width=86% class="center"> -->
+<!-- </p> -->
+
+https://user-images.githubusercontent.com/39692511/226858919-dd4ccf7e-a5ba-4a33-ab21-4785b8a7833c.mp4
+
+<br>
 
 <div align="center">
 
@@ -37,17 +41,15 @@ We've tried our best to make the codebase clean, short, easy to read, state-of-t
   [[`ReadPaper笔记`](https://readpaper.com/paper/4710371282714116097)]
 
 
-## 📺 Video demo (we use [these ppt slides](https://github.com/keyu-tian/SparK/releases/tag/file_sharing) to make the animated video)
-
-https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8235-e8907fd81e0e.mp4
+<!-- ## 📺 Video demo (we use [these ppt slides](https://github.com/keyu-tian/SparK/releases/tag/file_sharing) to make the animated video) -->
+<!-- https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8235-e8907fd81e0e.mp4 -->
 
 ## 🕹️ CoLab Visualization Demo
 
-Check [pretrain/viz_reconstruction.ipynb](pretrain/viz_reconstruction.ipynb) for visualizing the reconstruction of SparK pre-trained models, like:
-
+Check [pretrain/viz_reconstruction.ipynb](pretrain/viz_reconstruction.ipynb) for visualizing the reconstruction of SparK pretrained models, like:
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/39692511/226376648-3f28a1a6-275d-4f88-8f3e-cd1219882488.png" width=60%>
+<img src="https://user-images.githubusercontent.com/39692511/226376648-3f28a1a6-275d-4f88-8f3e-cd1219882488.png" width=50%
 <p>
 
 We also provide [pretrain/viz_spconv.ipynb](pretrain/viz_spconv.ipynb) that shows the "mask pattern vanishing" issue of dense conv layers.
@@ -55,52 +57,58 @@ We also provide [pretrain/viz_spconv.ipynb](pretrain/viz_spconv.ipynb) that show
 
 ## What's new here?
 
-### 🔥 On ResNets, generative pre-training surpasses contrastive learning for the first time:
+### 🔥 Pretrained CNN beats pretrained Swin-Transformer:
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/39692511/211497479-0563e891-f2ad-4cf1-b682-a21c2be1442d.png" width=68%>
+<img src="https://user-images.githubusercontent.com/39692511/226844278-1dc1e13c-1f07-4b8f-9843-8c47fca47253.jpg" width=66%>
 <p>
 
-### 🔥 ConvNeXt gains more from pre-training than Swin-Transformer, up to +3.5 points:
+### 🔥 After SparK pretraining, smaller models can beat un-pretrained larger models:
+
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/39692511/211497396-cd031318-ef54-45a4-a283-cd9810c15603.png" width=68%>
+<img src="https://user-images.githubusercontent.com/39692511/226861835-77e43c07-0a00-4020-9395-03e81bfe6959.jpg" width=72%>
 <p>
 
-### 🔥 Larger models benefit more from SparK pre-training, showing a scaling behavior:
+### 🔥 All models can benefit, showing a scaling behavior:
 
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/39692511/211705760-de15f4a1-0508-4690-981e-5640f4516d2a.png" width=68%>
+<img src="https://user-images.githubusercontent.com/39692511/211705760-de15f4a1-0508-4690-981e-5640f4516d2a.png" width=65%>
 <p>
 
 
-### 🔥 Pre-trained model can make reasonable predictions:
+### 🔥 Generative self-supervised pretraining surpasses contrastive learning:
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/39692511/211703443-220495d5-452a-446d-b7c7-c66a0c19741a.png" width=85%>
+<img src="https://user-images.githubusercontent.com/39692511/211497479-0563e891-f2ad-4cf1-b682-a21c2be1442d.png" width=65%>
 <p>
 
 #### See our [paper](https://arxiv.org/pdf/2301.03580.pdf) for more analysis, discussions, and evaluations.
 
 
-## Catalog
+## Todo list
 
-- [x] Pre-training code
-- [x] Fine-tuning code
+<details>
+
+<summary>catalog</summary>
+
+- [x] Pretraining code
+- [x] Finetuning code
 - [x] Colab visualization playground ([reconstruction](/pretrain/viz_reconstruction.ipynb), [sparse conv](pretrain/viz_spconv.ipynb))
 - [ ] Weights & visualization playground on `Huggingface`
 - [ ] Weights in `timm`
 
+</details>
 
-## SparK Pre-trained weights
+## SparK Pretrained weights
 
 **Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
 
-`reso.`: the image resolution; `acc@1`: ImageNet-1K fine-tuned acc (top-1)
+`reso.`: the image resolution; `acc@1`: ImageNet-1K finetuned acc (top-1)
 
 
-|     arch.      | reso. | acc@1 | #params | flops  | SparK pre-trained weights (self-supervised)                                                                                               |
+|     arch.      | reso. | acc@1 | #params | flops  | SparK pretrained weights (self-supervised)                                                                                               |
 |:--------------:|:-----:|:-----:|:-------:|:------:|:------------------------------------------------------------------------------------------------------------------------------------------|
 |    ResNet50    |  224  | 80.6  |   26M   |  4.1G  | [resnet50_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1H8605HbxGvrsu4x4rIoNr-Wkd7JkxFPQ/view?usp=share_link)             |
 |   ResNet101    |  224  | 82.2  |   45M   |  7.9G  | [resnet101_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1ZwTztjU-_rfvOVfLoce9SMw2Fx0DQfoO/view?usp=share_link)            |
@@ -119,12 +127,12 @@ We also provide [pretrain/viz_spconv.ipynb](pretrain/viz_spconv.ipynb) that show
 We highly recommended you to use `torch==1.10.0`, `torchvision==0.11.1`, and `timm==0.5.4` for reproduction.
 Check [INSTALL.md](INSTALL.md) to install all pip dependencies.
 
-- **Pre-training** all models on ImageNet-1k: see [pretrain/](pretrain)
+- **Pretraining** all models on ImageNet-1k: &nbsp;see [pretrain/](pretrain)
 
-- **Fine-tuning**
-  - all models on ImageNet: check [downstream_imagenet/](downstream_imagenet) for subsequent instructions.
-  - ResNets on COCO: see [downstream_d2/](downstream_d2)
-  - ConvNeXts on COCO: see [downstream_mmdet/](downstream_mmdet)
+- **Finetuning**
+  - all models on ImageNet: &nbsp;check [downstream_imagenet/](downstream_imagenet) for subsequent instructions.
+  - ResNets on COCO: &nbsp;see [downstream_d2/](downstream_d2)
+  - ConvNeXts on COCO: &nbsp;see [downstream_mmdet/](downstream_mmdet)
 
 
 ## Acknowledgement
