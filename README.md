@@ -101,14 +101,14 @@ We also provide [pretrain/viz_spconv.ipynb](pretrain/viz_spconv.ipynb) that show
 
 </details>
 
-## SparK Pretrained weights
+## SparK pretrained weights (self-supervised)
 
 **Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
 
 `reso.`: the image resolution; `acc@1`: ImageNet-1K finetuned acc (top-1)
 
 
-|     arch.      | reso. | acc@1 | #params | flops  | SparK pretrained weights (self-supervised)                                                                                               |
+|     arch.      | reso. | acc@1 | #params | flops  | SparK pretrained weights (self-supervised)                                                                                                |
 |:--------------:|:-----:|:-----:|:-------:|:------:|:------------------------------------------------------------------------------------------------------------------------------------------|
 |    ResNet50    |  224  | 80.6  |   26M   |  4.1G  | [resnet50_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1H8605HbxGvrsu4x4rIoNr-Wkd7JkxFPQ/view?usp=share_link)             |
 |   ResNet101    |  224  | 82.2  |   45M   |  7.9G  | [resnet101_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1ZwTztjU-_rfvOVfLoce9SMw2Fx0DQfoO/view?usp=share_link)            |
@@ -118,6 +118,7 @@ We also provide [pretrain/viz_spconv.ipynb](pretrain/viz_spconv.ipynb) that show
 |   ConvNeXt-B   |  224  | 84.8  |   89M   | 15.4G  | [convnextB_1kpretrained_official_style.pth](https://drive.google.com/file/d/1ZjWbqI1qoBcqeQijI5xX9E-YNkxpJcYV/view?usp=share_link)        |
 |   ConvNeXt-L   |  224  | 85.4  |  198M   | 34.4G  | [convnextL_1kpretrained_official_style.pth](https://drive.google.com/file/d/1qfYzGUpYBzuA88_kXkVl4KNUwfutMVfw/view?usp=share_link)        |
 |   ConvNeXt-L   |  384  | 86.0  |  198M   | 101.0G | [convnextL_384_1kpretrained_official_style.pth](https://drive.google.com/file/d/1YgWNXJjI89l35P4ksAmBNWZ2JZCpj9n4/view?usp=share_link)    |
+| S-with-decoder |  224  | 84.1  |   50M   |  8.7G  | [cnxS224_withdecoder_1kpretrained_spark_style.pth](https://drive.google.com/file/d/1bKvrE4sNq1PfzhWlQJXEPrl2kHqHRZM-/view?usp=share_link) |
 | L-with-decoder |  384  | 86.0  |  198M   | 101.0G | [cnxL384_withdecoder_1kpretrained_spark_style.pth](https://drive.google.com/file/d/1ZI9Jgtb3fKWE_vDFEly29w-1FWZSNwa0/view?usp=share_link) |
 
 
