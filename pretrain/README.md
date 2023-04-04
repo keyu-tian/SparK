@@ -11,7 +11,7 @@ See [/pretrain/models/custom.py](/pretrain/models/custom.py). The things needed 
 
 - implementing member function `get_downsample_ratio` in [/pretrain/models/custom.py line20](/pretrain/models/custom.py#L20).
 - implementing member function `get_feature_map_channels` in [/pretrain/models/custom.py line29](/pretrain/models/custom.py#L29).
-- implementing member function `forward` in [/pretrain/models/custom.py line 38](/pretrain/models/custom.py#L38).
+- implementing member function `forward` in [/pretrain/models/custom.py line38](/pretrain/models/custom.py#L38).
 - define `your_convnet(...)` with `@register_model` in [/pretrain/models/custom.py line54](/pretrain/models/custom.py#L53-L54).
 - add default kwargs of `your_convnet(...)` in [/pretrain/models/\_\_init\_\_.py line34](/pretrain/models/__init__.py#L34).
 
