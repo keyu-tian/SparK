@@ -9,11 +9,11 @@ See [/INSTALL.md](/INSTALL.md) to prepare `pip` dependencies and the ImageNet da
 
 See [/pretrain/models/custom.py](/pretrain/models/custom.py). The things needed to do is:
 
-- implementing member function `get_downsample_ratio` in [/pretrain/models/custom.py](/pretrain/models/custom.py).
-- implementing member function `get_feature_map_channels` in [/pretrain/models/custom.py](/pretrain/models/custom.py).
-- implementing member function `forward` in [/pretrain/models/custom.py](/pretrain/models/custom.py).
-- define `your_convnet(...)` with `@register_model` in [/pretrain/models/custom.py](/pretrain/models/custom.py).
-- add default kwargs of `your_convnet(...)` in [/pretrain/models/\_\_init\_\_.py](/pretrain/models/__init__.py).
+- implementing member function `get_downsample_ratio` in [/pretrain/models/custom.py line20](/pretrain/models/custom.py#L20).
+- implementing member function `get_feature_map_channels` in [/pretrain/models/custom.py line29](/pretrain/models/custom.py#L29).
+- implementing member function `forward` in [/pretrain/models/custom.py line 38](/pretrain/models/custom.py#L38).
+- define `your_convnet(...)` with `@register_model` in [/pretrain/models/custom.py line54](/pretrain/models/custom.py#L53-L54).
+- add default kwargs of `your_convnet(...)` in [/pretrain/models/\_\_init\_\_.py line34](/pretrain/models/__init__.py#L34).
 
 Then you can use `--model=your_convnet` in the pre-training script.
 
@@ -24,7 +24,7 @@ For pre-training, run [/pretrain/main.sh](/pretrain/main.sh) with bash.
 It is **required** to specify the ImageNet data folder (`--data_path`), the model name (`--model`), and your experiment name (the first argument of `main.sh`) when running the script.
 
 We use the **same** pre-training configurations (lr, batch size, etc.) for all models (ResNets and ConvNeXts).
-Their names and **default values** can be found in [/pretrain/utils/arg_util.py line24-47](/pretrain/utils/arg_util.py).
+Their names and **default values** can be found in [/pretrain/utils/arg_util.py line23-44](/pretrain/utils/arg_util.py#L23-L44).
 These default configurations (like batch size 4096) would be used, unless you specify some like `--bs=512`.
 
 Here is an example command pre-training a ResNet50 on single machine with 8 GPUs:
@@ -93,8 +93,8 @@ In SparK, the mask patch size **equals to** the downsample ratio of the CNN mode
 
 Here is the reason: when we do mask, we:
 
-1. first generate the binary mask for the **smallest** resolution feature map, i.e., generate the `_cur_active` or `active_b1ff` in [/pretrain/spark.py line86-87](/pretrain/spark.py), which is a `torch.BoolTensor` shaped as `[B, 1, fmap_size, fmap_size]`, and would be used to mask the smallest feature map.
-3. then progressively upsample it (i.e., expand its 2nd and 3rd dimensions by calling `repeat_interleave(..., 2)` and `repeat_interleave(..., 3)` in [/pretrain/encoder.py line16](/pretrain/encoder.py)), to mask those feature maps ([`x` in line21](/pretrain/encoder.py)) with larger resolutions .
+1. first generate the binary mask for the **smallest** resolution feature map, i.e., generate the `_cur_active` or `active_b1ff` in [/pretrain/spark.py line86-87](/pretrain/spark.py#L86-L87), which is a `torch.BoolTensor` shaped as `[B, 1, fmap_size, fmap_size]`, and would be used to mask the smallest feature map.
+3. then progressively upsample it (i.e., expand its 2nd and 3rd dimensions by calling `repeat_interleave(..., 2)` and `repeat_interleave(..., 3)` in [/pretrain/encoder.py line16](/pretrain/encoder.py#L16)), to mask those feature maps ([`x` in line21](/pretrain/encoder.py#L21)) with larger resolutions .
 
 So if you want a patch size of 16 or 8, you should actually define a new CNN model with a downsample ratio of 16 or 8.
-See [Tutorial for customizing your own CNN model (above)](https://github.com/keyu-tian/SparK/tree/main/pretrain#some-details-how-we-mask-images-and-how-to-set-the-patch-size).
+See [Tutorial for customizing your own CNN model (above)](https://github.com/keyu-tian/SparK/tree/main/pretrain/#tutorial-for-customizing-your-own-cnn-model).
