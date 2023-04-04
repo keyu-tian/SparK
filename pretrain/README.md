@@ -1,17 +1,30 @@
 ## Preparation for ImageNet-1k pre-training
 
-See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to prepare `pip` dependencies and the ImageNet dataset.
+See [/INSTALL.md](/INSTALL.md) to prepare `pip` dependencies and the ImageNet dataset.
 
 **Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
 
 
+## Tutorial for customizing your own CNN model
+
+See [/pretrain/models/custom.py](/pretrain/models/custom.py). The things needed to do is:
+
+- implementing member function `get_downsample_ratio` in [/pretrain/models/custom.py](/pretrain/models/custom.py).
+- implementing member function `get_feature_map_channels` in [/pretrain/models/custom.py](/pretrain/models/custom.py).
+- implementing member function `forward` in [/pretrain/models/custom.py](/pretrain/models/custom.py).
+- define `your_convnet(...)` with `@register_model` in [/pretrain/models/custom.py](/pretrain/models/custom.py).
+- add default kwargs of `your_convnet(...)` in [/pretrain/models/__init__.py](/pretrain/models/__init__.py).
+
+Then you can use `--model=your_convnet` in the pre-training script.
+
+
 ## Pre-training Any Model on ImageNet-1k (224x224)
 
-For pre-training, run [main.sh](https://github.com/keyu-tian/SparK/blob/main/pretrain/main.sh) with bash.
+For pre-training, run [/pretrain/main.sh](/pretrain/main.sh) with bash.
 It is **required** to specify the ImageNet data folder (`--data_path`), the model name (`--model`), and your experiment name (the first argument of `main.sh`) when running the script.
 
 We use the **same** pre-training configurations (lr, batch size, etc.) for all models (ResNets and ConvNeXts).
-Their names and **default values** can be found in [utils/arg_util.py line24-47](https://github.com/keyu-tian/SparK/blob/main/pretrain/utils/arg_util.py#L24).
+Their names and **default values** can be found in [/pretrain/utils/arg_util.py line24-47](/pretrain/utils/arg_util.py).
 These default configurations (like batch size 4096) would be used, unless you specify some like `--bs=512`.
 
 Here is an example command pre-training a ResNet50 on single machine with 8 GPUs:
@@ -69,8 +82,8 @@ Add `--resume_from=path/to/<model>still_pretraining.pth` to resume from a saved 
 ## Regarding sparse convolution
 
 We do not use sparse convolutions in this pytorch implementation, due to their limited optimization on modern hardwares.
-As can be found in [encoder.py](https://github.com/keyu-tian/SparK/blob/main/pretrain/encoder.py), we use masked dense convolution to simulate submanifold sparse convolution.
-We also define some sparse pooling or normalization layers in [encoder.py](https://github.com/keyu-tian/SparK/blob/main/pretrain/encoder.py).
+As can be found in [/pretrain/encoder.py](/pretrain/encoder.py), we use masked dense convolution to simulate submanifold sparse convolution.
+We also define some sparse pooling or normalization layers in [/pretrain/encoder.py](/pretrain/encoder.py).
 All these "sparse" layers are implemented through pytorch built-in operators.
 
 
@@ -80,10 +93,8 @@ In SparK, the mask patch size **equals to** the downsample ratio of the CNN mode
 
 Here is the reason: when we do mask, we:
 
-1. first generate the binary mask for the **smallest** resolution feature map, i.e., generate the `_cur_active` or `active_b1ff` in [line86-87](https://github.com/keyu-tian/SparK/blob/main/pretrain/spark.py#L86), which is a `torch.BoolTensor` shaped as `[B, 1, fmap_size, fmap_size]`, and would be used to mask the smallest feature map.
-3. then progressively upsample it (i.e., expand its 2nd and 3rd dimensions by calling `repeat_interleave(..., 2)` and `repeat_interleave(..., 3)` in [line16](https://github.com/keyu-tian/SparK/blob/main/pretrain/encoder.py#L16)), to mask those feature maps ([`x` in line21](https://github.com/keyu-tian/SparK/blob/main/pretrain/encoder.py#L21)) with larger resolutions .
+1. first generate the binary mask for the **smallest** resolution feature map, i.e., generate the `_cur_active` or `active_b1ff` in [/pretrain/spark.py line86-87](/pretrain/spark.py), which is a `torch.BoolTensor` shaped as `[B, 1, fmap_size, fmap_size]`, and would be used to mask the smallest feature map.
+3. then progressively upsample it (i.e., expand its 2nd and 3rd dimensions by calling `repeat_interleave(..., 2)` and `repeat_interleave(..., 3)` in [/pretrain/encoder.py line16](/pretrain/encoder.py)), to mask those feature maps ([`x` in line21](/pretrain/encoder.py)) with larger resolutions .
 
 So if you want a patch size of 16 or 8, you should actually define a new CNN model with a downsample ratio of 16 or 8.
-Note that the `forward` function of this CNN should have an arg named `hierarchy`. You can look at https://github.com/keyu-tian/SparK/blob/main/pretrain/models/convnext.py#L78 to see what `hierarchy` means and how to handle it.
-
-After that, you can simply run `main.sh` with `--hierarchy=3` and see if it works.
+See `Tutorial for customizing your own CNN model` above.

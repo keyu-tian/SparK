@@ -20,7 +20,7 @@ from decoder import LightDecoder
 class SparK(nn.Module):
     def __init__(
             self, sparse_encoder: encoder.SparseEncoder, dense_decoder: LightDecoder,
-            mask_ratio=0.6, densify_norm='bn', sbn=False, hierarchy=4,
+            mask_ratio=0.6, densify_norm='bn', sbn=False,
     ):
         super().__init__()
         input_size, downsample_raito = sparse_encoder.input_size, sparse_encoder.downsample_raito
@@ -33,15 +33,23 @@ class SparK(nn.Module):
         self.dense_decoder = dense_decoder
         
         self.sbn = sbn
-        self.hierarchy = hierarchy
+        self.hierarchy = len(sparse_encoder.enc_feat_map_chs)
         self.densify_norm_str = densify_norm.lower()
         self.densify_norms = nn.ModuleList()
         self.densify_projs = nn.ModuleList()
         self.mask_tokens = nn.ParameterList()
         
         # build the `densify` layers
-        e_width, d_width = self.sparse_encoder.fea_dim, self.dense_decoder.width
-        for i in range(self.hierarchy):
+        e_widths, d_width = self.sparse_encoder.enc_feat_map_chs, self.dense_decoder.width
+        e_widths: List[int]
+        for i in range(self.hierarchy): # from the smallest feat map to the largest; i=0: the last feat map; i=1: the second last feat map ...
+            e_width = e_widths.pop()
+            # create mask token
+            p = nn.Parameter(torch.zeros(1, e_width, 1, 1))
+            trunc_normal_(p, mean=0, std=.02, a=-.02, b=.02)
+            self.mask_tokens.append(p)
+            
+            # create densify norm
             if self.densify_norm_str == 'bn':
                 densify_norm = (encoder.SparseSyncBatchNorm2d if self.sbn else encoder.SparseBatchNorm2d)(e_width)
             elif self.densify_norm_str == 'ln':
@@ -50,6 +58,7 @@ class SparK(nn.Module):
                 densify_norm = nn.Identity()
             self.densify_norms.append(densify_norm)
             
+            # create densify proj
             if i == 0 and e_width == d_width:
                 densify_proj = nn.Identity()    # todo: NOTE THAT CONVNEXT-S WOULD USE THIS, because it has a width of 768 that equals to the decoder's width 768
                 print(f'[SparK.__init__, densify {i+1}/{self.hierarchy}]: use nn.Identity() as densify_proj')
@@ -59,10 +68,7 @@ class SparK(nn.Module):
                 print(f'[SparK.__init__, densify {i+1}/{self.hierarchy}]: densify_proj(ksz={kernel_size}, #para={sum(x.numel() for x in densify_proj.parameters()) / 1e6:.2f}M)')
             self.densify_projs.append(densify_proj)
             
-            p = nn.Parameter(torch.zeros(1, e_width, 1, 1))
-            trunc_normal_(p, mean=0, std=.02, a=-.02, b=.02)
-            self.mask_tokens.append(p)
-            e_width //= 2
+            # todo: the decoder's width follows a simple halfing rule; you can change it to any other rule
             d_width //= 2
         
         print(f'[SparK.__init__] dims of mask_tokens={tuple(p.numel() for p in self.mask_tokens)}')
@@ -89,7 +95,7 @@ class SparK(nn.Module):
         masked_bchw = inp_bchw * active_b1hw
         
         # step2. Encode: get hierarchical encoded sparse features (a list containing 4 feature maps at 4 scales)
-        fea_bcffs: List[torch.Tensor] = self.sparse_encoder(masked_bchw, hierarchy=self.hierarchy)
+        fea_bcffs: List[torch.Tensor] = self.sparse_encoder(masked_bchw)
         fea_bcffs.reverse()  # after reversion: from the smallest feature map to the largest
         
         # step3. Densify: get hierarchical dense features for decoding

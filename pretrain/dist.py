@@ -8,12 +8,11 @@ import os
 from typing import List
 from typing import Union
 
+import sys
 import torch
 import torch.distributed as tdist
 import torch.multiprocessing as mp
-from torch.distributed import barrier as __barrier
 
-barrier = __barrier
 __rank, __local_rank, __world_size, __device = 0, 0, 1, 'cpu'
 __initialized = False
 
@@ -23,6 +22,10 @@ def initialized():
 
 
 def initialize(backend='nccl'):
+    if not torch.cuda.is_available():
+        print(f'[dist initialize] cuda is not available, use cpu instead', file=sys.stderr)
+        return
+    
     # ref: https://github.com/open-mmlab/mmcv/blob/master/mmcv/runner/dist_utils.py#L29
     if mp.get_start_method(allow_none=True) is None:
         mp.set_start_method('spawn')
@@ -62,6 +65,11 @@ def is_master():
 
 def is_local_master():
     return __local_rank == 0
+
+
+def barrier():
+    if __initialized:
+        tdist.barrier()
 
 
 def parallelize(net, syncbn=False):

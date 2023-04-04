@@ -25,7 +25,7 @@ https://user-images.githubusercontent.com/39692511/226858919-dd4ccf7e-a5ba-4a33-
 
 ## 🔥 News
 
-- On **Mar. 22nd (UTC+8 8pm; UTC+0 12am)** another livestream would be held at [极市平台-bilibili](https://live.bilibili.com/3344545).
+- On **Mar. 22nd (UTC+8 8pm)** another livestream would be held at 极市平台-Bilibili! [[`📹Recorded Video`](https://www.bilibili.com/video/BV1Da4y1T7mr/)]
 - The share on [TechBeat (将门创投)](https://www.techbeat.net/talk-info?id=758) is scheduled on **Mar. 16th (UTC+8 8pm)** too! [[`📹Recorded Video`](https://www.techbeat.net/talk-info?id=758)]
 - We are honored to be invited by Synced ("机器之心机动组 视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am, UTC+8 7pm)**, welcome! [[`📹Recorded Video`](https://www.bilibili.com/video/BV1J54y1u7U3/)]
 - This work got accepted to ICLR 2023 as a Spotlight (notable-top-25%).
@@ -44,7 +44,7 @@ https://user-images.githubusercontent.com/39692511/226858919-dd4ccf7e-a5ba-4a33-
 <!-- ## 📺 Video demo (we use [these ppt slides](https://github.com/keyu-tian/SparK/releases/tag/file_sharing) to make the animated video) -->
 <!-- https://user-images.githubusercontent.com/6366788/213662770-5f814de0-cbe8-48d9-8235-e8907fd81e0e.mp4 -->
 
-## 🕹️ CoLab Visualization Demo
+## 🕹️ Colab Visualization Demo
 
 Check [pretrain/viz_reconstruction.ipynb](pretrain/viz_reconstruction.ipynb) for visualizing the reconstruction of SparK pretrained models, like:
 
@@ -94,9 +94,10 @@ We also provide [pretrain/viz_spconv.ipynb](pretrain/viz_spconv.ipynb) that show
 <summary>catalog</summary>
 
 - [x] Pretraining code
+- [x] Pretraining toturial for custom CNN model ([pretrain/models/custom.py](pretrain/models/custom.py))
+- [x] Pretraining Colab visualization playground ([reconstruction](/pretrain/viz_reconstruction.ipynb), [sparse conv](pretrain/viz_spconv.ipynb))
 - [x] Finetuning code
-- [x] Colab visualization playground ([reconstruction](/pretrain/viz_reconstruction.ipynb), [sparse conv](pretrain/viz_spconv.ipynb))
-- [ ] Weights & visualization playground on `Huggingface`
+- [ ] Weights & visualization playground in `huggingface`
 - [ ] Weights in `timm`
 
 </details>
@@ -128,7 +129,10 @@ We also provide [pretrain/viz_spconv.ipynb](pretrain/viz_spconv.ipynb) that show
 We highly recommended you to use `torch==1.10.0`, `torchvision==0.11.1`, and `timm==0.5.4` for reproduction.
 Check [INSTALL.md](INSTALL.md) to install all pip dependencies.
 
-- **Pretraining** all models on ImageNet-1k: &nbsp;see [pretrain/](pretrain)
+- **Pretraining**
+  - all ResNets and ConvNeXts on ImageNet-1k: &nbsp;see [pretrain/](pretrain)
+  - **your own CNN models**: &nbsp;see [pretrain/](pretrain), especially [pretrain/models/custom.py](pretrain/models/custom.py)
+
 
 - **Finetuning**
   - all models on ImageNet: &nbsp;check [downstream_imagenet/](downstream_imagenet) for subsequent instructions.

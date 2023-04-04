@@ -5,6 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 #
 # This file is basically a copy of: https://github.com/facebookresearch/ConvNeXt/blob/06f7b05f922e21914916406141f50f82b4a15852/models/convnext.py
+from typing import List
 
 import torch
 import torch.nn as nn
@@ -34,7 +35,7 @@ class ConvNeXt(nn.Module):
                  sparse=True,
                  ):
         super().__init__()
-        
+        self.dims: List[int] = dims
         self.downsample_layers = nn.ModuleList()  # stem and 3 intermediate downsampling conv layers
         stem = nn.Sequential(
             nn.Conv2d(in_chans, dims[0], kernel_size=4, stride=4),
@@ -75,13 +76,19 @@ class ConvNeXt(nn.Module):
             trunc_normal_(m.weight, std=.02)
             nn.init.constant_(m.bias, 0)
     
-    def forward(self, x, hierarchy=0):
-        ls = []
-        for i in range(4):
-            x = self.downsample_layers[i](x)
-            x = self.stages[i](x)
-            ls.append(x if hierarchy >= 4-i else None)
-        if hierarchy:
+    def get_downsample_ratio(self) -> int:
+        return 32
+    
+    def get_feature_map_channels(self) -> List[int]:
+        return self.dims
+    
+    def forward(self, x, hierarchical=False):
+        if hierarchical:
+            ls = []
+            for i in range(4):
+                x = self.downsample_layers[i](x)
+                x = self.stages[i](x)
+                ls.append(x)
             return ls
         else:
             return self.fc(self.norm(x.mean([-2, -1]))) # (B, C, H, W) =mean=> (B, C) =norm&fc=> (B, NumCls)
@@ -116,17 +123,3 @@ def convnext_large(pretrained=False, in_22k=False, **kwargs):
     model = ConvNeXt(depths=[3, 3, 27, 3], dims=[192, 384, 768, 1536], **kwargs)
     return model
 
-
-if __name__ == '__main__':
-    from timm.models import create_model
-    cnx = create_model('convnext_small', sparse=False)
-    
-    def prt(lst):
-        print([tuple(t.shape) if t is not None else '(None)' for t in lst])
-    with torch.no_grad():
-        inp = torch.rand(2, 3, 224, 224)
-        prt(cnx(inp))
-        prt(cnx(inp, hierarchy=1))
-        prt(cnx(inp, hierarchy=2))
-        prt(cnx(inp, hierarchy=3))
-        prt(cnx(inp, hierarchy=4))

@@ -19,7 +19,7 @@ def worker_init_fn(worker_id):
 
 
 class DistInfiniteBatchSampler(Sampler):
-    def __init__(self, world_size, rank, dataset_len, glb_batch_size, seed=0, filling=False, shuffle=True):
+    def __init__(self, world_size, rank, dataset_len, glb_batch_size, seed=1, filling=False, shuffle=True):
         assert glb_batch_size % world_size == 0
         self.world_size, self.rank = world_size, rank
         self.dataset_len = dataset_len

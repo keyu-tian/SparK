@@ -37,7 +37,7 @@ def main_pt():
     data_loader_train = DataLoader(
         dataset=dataset_train, num_workers=args.dataloader_workers, pin_memory=True,
         batch_sampler=DistInfiniteBatchSampler(
-            dataset_len=len(dataset_train), glb_batch_size=args.glb_batch_size, seed=args.seed,
+            dataset_len=len(dataset_train), glb_batch_size=args.glb_batch_size,
             shuffle=True, filling=True, rank=dist.get_rank(), world_size=dist.get_world_size(),
         ), worker_init_fn=worker_init_fn
     )
@@ -49,7 +49,7 @@ def main_pt():
     dec = LightDecoder(enc.downsample_raito, sbn=args.sbn)
     model_without_ddp = SparK(
         sparse_encoder=enc, dense_decoder=dec, mask_ratio=args.mask,
-        densify_norm=args.densify_norm, sbn=args.sbn, hierarchy=args.hierarchy,
+        densify_norm=args.densify_norm, sbn=args.sbn,
     ).to(args.device)
     print(f'[PT model] model = {model_without_ddp}\n')
     model: DistributedDataParallel = DistributedDataParallel(model_without_ddp, device_ids=[dist.get_local_rank()], find_unused_parameters=False, broadcast_buffers=False)

@@ -23,13 +23,13 @@ _base_ = [
 model = dict(
     backbone=dict(
         in_chans=3,
-        depths=[3, 3, 27, 3],           # [modified] according to tiny to base
-        dims=[128, 256, 512, 1024],     # [modified] according to tiny to base
-        drop_path_rate=0.5,             # [modified] according to tiny to base
+        depths=[3, 3, 27, 3],           # [modified] according to tiny-to-base
+        dims=[128, 256, 512, 1024],     # [modified] according to tiny-to-base
+        drop_path_rate=0.5,             # [modified] according to tiny-to-base
         layer_scale_init_value=1.0,
         out_indices=[0, 1, 2, 3],
     ),
-    neck=dict(in_channels=[128, 256, 512, 1024]))   # [modified] according to tiny to base
+    neck=dict(in_channels=[128, 256, 512, 1024]))   # [modified] according to tiny-to-base
 
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)

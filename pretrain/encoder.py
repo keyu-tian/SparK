@@ -156,10 +156,10 @@ class SparseConvNeXtBlock(nn.Module):
 
 
 class SparseEncoder(nn.Module):
-    def __init__(self, conv_model, input_size, downsample_raito, encoder_fea_dim, sbn=False, verbose=False):
+    def __init__(self, cnn, input_size, sbn=False, verbose=False):
         super(SparseEncoder, self).__init__()
-        self.sp_cnn = SparseEncoder.dense_model_to_sparse(m=conv_model, verbose=verbose, sbn=sbn)
-        self.input_size, self.downsample_raito, self.fea_dim = input_size, downsample_raito, encoder_fea_dim
+        self.sp_cnn = SparseEncoder.dense_model_to_sparse(m=cnn, verbose=verbose, sbn=sbn)
+        self.input_size, self.downsample_raito, self.enc_feat_map_chs = input_size, cnn.get_downsample_ratio(), cnn.get_feature_map_channels()
     
     @staticmethod
     def dense_model_to_sparse(m: nn.Module, verbose=False, sbn=False):
@@ -204,5 +204,5 @@ class SparseEncoder(nn.Module):
         del m
         return oup
     
-    def forward(self, x, hierarchy):
-        return self.sp_cnn(x, hierarchy=hierarchy)
+    def forward(self, x):
+        return self.sp_cnn(x, hierarchical=True)

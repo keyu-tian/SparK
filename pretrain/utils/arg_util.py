@@ -15,19 +15,16 @@ import dist
 
 class Args(Tap):
     # environment
-    exp_name: str
-    exp_dir: str
-    data_path: str
+    exp_name: str = 'your_exp_name'
+    exp_dir: str = 'your_exp_dir'   # will be created if not exists
+    data_path: str = 'imagenet_data_path'
     resume_from: str = ''   # resume from some checkpoint.pth
-    seed: int = 1
     
     # SparK hyperparameters
-    mask: float = 0.6
-    hierarchy: int = 4
+    mask: float = 0.6   # mask ratio, should be in (0, 1)
     
     # encoder hyperparameters
-    model: str = 'res50'
-    model_alias: str = 'res50'
+    model: str = 'resnet50'
     input_size: int = 224
     sbn: bool = True
     
@@ -70,7 +67,7 @@ class Args(Tap):
     
     @property
     def is_resnet(self):
-        return 'resnet' in self.model or 'res' in self.model_alias
+        return 'resnet' in self.model
     
     def log_epoch(self):
         if not dist.is_local_master():
@@ -96,7 +93,6 @@ class Args(Tap):
 
 def init_dist_and_get_args():
     from utils import misc
-    from models import model_alias_to_fullname, model_fullname_to_alias
     
     # initialize
     args = Args(explicit_bool=True).parse_args()
@@ -116,10 +112,6 @@ def init_dist_and_get_args():
     misc.init_distributed_environ(exp_dir=args.exp_dir)
     
     # update args
-    if args.model in model_alias_to_fullname.keys():
-        args.model = model_alias_to_fullname[args.model]
-    args.model_alias = model_fullname_to_alias[args.model]
-    
     args.first_logging = True
     args.device = dist.get_device()
     args.batch_size_per_gpu = args.bs // dist.get_world_size()
@@ -136,8 +128,5 @@ def init_dist_and_get_args():
     args.opt = args.opt.lower()
     args.lr = args.base_lr * args.glb_batch_size / 256
     args.wde = args.wde or args.wd
-    
-    if args.hierarchy < 1:
-        args.hierarchy = 1
     
     return args
