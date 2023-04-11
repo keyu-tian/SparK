@@ -25,6 +25,7 @@ https://user-images.githubusercontent.com/39692511/226858919-dd4ccf7e-a5ba-4a33-
 
 ## 🔥 News
 
+- A brief introduction (in English) is available on [SlidesAlive](https://recorder-v3.slideslive.com/?share=81463&s=e4098919-55dc-431e-83dd-e1979e5c0faa) now!
 - On **Mar. 22nd (UTC+8 8pm)** another livestream would be held at 极市平台-Bilibili! [[`📹Recorded Video`](https://www.bilibili.com/video/BV1Da4y1T7mr/)]
 - The share on [TechBeat (将门创投)](https://www.techbeat.net/talk-info?id=758) is scheduled on **Mar. 16th (UTC+8 8pm)** too! [[`📹Recorded Video`](https://www.techbeat.net/talk-info?id=758)]
 - We are honored to be invited by Synced ("机器之心机动组 视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am, UTC+8 7pm)**, welcome! [[`📹Recorded Video`](https://www.bilibili.com/video/BV1J54y1u7U3/)]
@@ -102,27 +103,44 @@ We also provide [pretrain/viz_spconv.ipynb](pretrain/viz_spconv.ipynb) that show
 
 </details>
 
-## SparK pretrained weights (self-supervised)
+
+## Pretrained weights (self-supervised; w/o decoder; can be directly finetuned)
 
 **Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
 
 `reso.`: the image resolution; `acc@1`: ImageNet-1K finetuned acc (top-1)
 
 
-|     arch.      | reso. | acc@1 | #params | flops  | SparK pretrained weights (self-supervised)                                                                                                |
-|:--------------:|:-----:|:-----:|:-------:|:------:|:------------------------------------------------------------------------------------------------------------------------------------------|
-|    ResNet50    |  224  | 80.6  |   26M   |  4.1G  | [resnet50_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1H8605HbxGvrsu4x4rIoNr-Wkd7JkxFPQ/view?usp=share_link)             |
-|   ResNet101    |  224  | 82.2  |   45M   |  7.9G  | [resnet101_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1ZwTztjU-_rfvOVfLoce9SMw2Fx0DQfoO/view?usp=share_link)            |
-|   ResNet152    |  224  | 82.7  |   60M   | 11.6G  | [resnet152_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1FOVuECnzQAI-OzE-hnrqW7tVpg8kTziM/view?usp=share_link)            |
-|   ResNet200    |  224  | 83.1  |   65M   | 15.1G  | [resnet200_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1_Q4e30qqhjchrdyW3fT6P98Ga-WnQ57s/view?usp=share_link)            |
-|   ConvNeXt-S   |  224  | 84.1  |   50M   |  8.7G  | [convnextS_1kpretrained_official_style.pth](https://drive.google.com/file/d/1Ah6lgDY5YDNXoXHQHklKKMbEd08RYivN/view?usp=share_link)        |
-|   ConvNeXt-B   |  224  | 84.8  |   89M   | 15.4G  | [convnextB_1kpretrained_official_style.pth](https://drive.google.com/file/d/1ZjWbqI1qoBcqeQijI5xX9E-YNkxpJcYV/view?usp=share_link)        |
-|   ConvNeXt-L   |  224  | 85.4  |  198M   | 34.4G  | [convnextL_1kpretrained_official_style.pth](https://drive.google.com/file/d/1qfYzGUpYBzuA88_kXkVl4KNUwfutMVfw/view?usp=share_link)        |
-|   ConvNeXt-L   |  384  | 86.0  |  198M   | 101.0G | [convnextL_384_1kpretrained_official_style.pth](https://drive.google.com/file/d/1YgWNXJjI89l35P4ksAmBNWZ2JZCpj9n4/view?usp=share_link)    |
-| S-with-decoder |  224  | 84.1  |   50M   |  8.7G  | [cnxS224_withdecoder_1kpretrained_spark_style.pth](https://drive.google.com/file/d/1bKvrE4sNq1PfzhWlQJXEPrl2kHqHRZM-/view?usp=share_link) |
-| L-with-decoder |  384  | 86.0  |  198M   | 101.0G | [cnxL384_withdecoder_1kpretrained_spark_style.pth](https://drive.google.com/file/d/1ZI9Jgtb3fKWE_vDFEly29w-1FWZSNwa0/view?usp=share_link) |
+|     arch.      | reso. | acc@1 | #params | flops  | weights (self-supervised, without SparK's decoder)                                                                                     |
+|:--------------:|:-----:|:-----:|:-------:|:------:|:---------------------------------------------------------------------------------------------------------------------------------------|
+|    ResNet50    |  224  | 80.6  |   26M   |  4.1G  | [resnet50_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1H8605HbxGvrsu4x4rIoNr-Wkd7JkxFPQ/view?usp=share_link)          |
+|   ResNet101    |  224  | 82.2  |   45M   |  7.9G  | [resnet101_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1ZwTztjU-_rfvOVfLoce9SMw2Fx0DQfoO/view?usp=share_link)         |
+|   ResNet152    |  224  | 82.7  |   60M   | 11.6G  | [resnet152_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1FOVuECnzQAI-OzE-hnrqW7tVpg8kTziM/view?usp=share_link)         |
+|   ResNet200    |  224  | 83.1  |   65M   | 15.1G  | [resnet200_1kpretrained_timm_style.pth](https://drive.google.com/file/d/1_Q4e30qqhjchrdyW3fT6P98Ga-WnQ57s/view?usp=share_link)         |
+|   ConvNeXt-S   |  224  | 84.1  |   50M   |  8.7G  | [convnextS_1kpretrained_official_style.pth](https://drive.google.com/file/d/1Ah6lgDY5YDNXoXHQHklKKMbEd08RYivN/view?usp=share_link)     |
+|   ConvNeXt-B   |  224  | 84.8  |   89M   | 15.4G  | [convnextB_1kpretrained_official_style.pth](https://drive.google.com/file/d/1ZjWbqI1qoBcqeQijI5xX9E-YNkxpJcYV/view?usp=share_link)     |
+|   ConvNeXt-L   |  224  | 85.4  |  198M   | 34.4G  | [convnextL_1kpretrained_official_style.pth](https://drive.google.com/file/d/1qfYzGUpYBzuA88_kXkVl4KNUwfutMVfw/view?usp=share_link)     |
+|   ConvNeXt-L   |  384  | 86.0  |  198M   | 101.0G | [convnextL_384_1kpretrained_official_style.pth](https://drive.google.com/file/d/1YgWNXJjI89l35P4ksAmBNWZ2JZCpj9n4/view?usp=share_link) |
 
 
+<details>
+
+<summary> <b> Pretrained weights (with SparK's UNet-style decoder; can be used to reconstruct images) </b> </summary>
+
+<br>
+
+|   arch.    | reso. | acc@1 | #params | flops  | weights (self-supervised, with SparK's decoder)                                                                                           |
+|:----------:|:-----:|:-----:|:-------:|:------:|:------------------------------------------------------------------------------------------------------------------------------------------|
+|  ResNet50  |  224  | 80.6  |   26M   |  4.1G  | [res50_withdecoder_1kpretrained_spark_style.pth](https://drive.google.com/file/d/1STt3w3e5q9eCPZa8VzcJj1zG6p3jLeSF/view?usp=share_link)   |
+| ResNet101  |  224  | 82.2  |   45M   |  7.9G  | [res101_withdecoder_1kpretrained_spark_style.pth](https://drive.google.com/file/d/1GjN48LKtlop2YQre6---7ViCWO-3C0yr/view?usp=share_link)  |
+| ResNet152  |  224  | 82.7  |   60M   | 11.6G  | [res152_withdecoder_1kpretrained_spark_style.pth](https://drive.google.com/file/d/1U3Cd94j4ZHfYR2dUjWmsEWfjP6Opx4oo/view?usp=share_link)  |
+| ResNet200  |  224  | 83.1  |   65M   | 15.1G  | [res200_withdecoder_1kpretrained_spark_style.pth](https://drive.google.com/file/d/13AFSqvIr0v-2hmb4DzVza45t_lhf2CnD/view?usp=share_link)  |
+| ConvNeXt-S |  224  | 84.1  |   50M   |  8.7G  | [cnxS224_withdecoder_1kpretrained_spark_style.pth](https://drive.google.com/file/d/1bKvrE4sNq1PfzhWlQJXEPrl2kHqHRZM-/view?usp=share_link) |
+| ConvNeXt-L |  384  | 86.0  |  198M   | 101.0G | [cnxL384_withdecoder_1kpretrained_spark_style.pth](https://drive.google.com/file/d/1ZI9Jgtb3fKWE_vDFEly29w-1FWZSNwa0/view?usp=share_link) |
+
+</details>
+
+<br>
 
 ## Installation & Running
 
