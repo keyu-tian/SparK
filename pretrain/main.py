@@ -61,7 +61,7 @@ def main_pt():
         densify_norm=args.densify_norm, sbn=args.sbn,
     ).to(args.device)
     print(f'[PT model] model = {model_without_ddp}\n')
-    if dist.initialized() > 1:
+    if dist.initialized():
         model: DistributedDataParallel = DistributedDataParallel(model_without_ddp, device_ids=[dist.get_local_rank()], find_unused_parameters=False, broadcast_buffers=False)
     else:
         model = LocalDDP(model_without_ddp)
