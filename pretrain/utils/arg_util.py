@@ -112,6 +112,8 @@ def init_dist_and_get_args():
     misc.init_distributed_environ(exp_dir=args.exp_dir)
     
     # update args
+    if not dist.initialized():
+        args.sbn = False
     args.first_logging = True
     args.device = dist.get_device()
     args.batch_size_per_gpu = args.bs // dist.get_world_size()

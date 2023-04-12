@@ -22,8 +22,17 @@ from models import build_sparse_encoder
 from sampler import DistInfiniteBatchSampler, worker_init_fn
 from spark import SparK
 from utils import arg_util, misc, lamb
-from utils.imagenet import build_imagenet_pretrain
+from utils.imagenet import build_dataset_to_pretrain
 from utils.lr_control import lr_wd_annealing, get_param_groups
+
+
+class LocalDDP(torch.nn.Module):
+    def __init__(self, module):
+        super(LocalDDP, self).__init__()
+        self.module = module
+    
+    def forward(self, *args, **kwargs):
+        return self.module(*args, **kwargs)
 
 
 def main_pt():
@@ -33,7 +42,7 @@ def main_pt():
     
     # build data
     print(f'[build data for pre-training] ...\n')
-    dataset_train = build_imagenet_pretrain(args.data_path, args.input_size)
+    dataset_train = build_dataset_to_pretrain(args.data_path, args.input_size)
     data_loader_train = DataLoader(
         dataset=dataset_train, num_workers=args.dataloader_workers, pin_memory=True,
         batch_sampler=DistInfiniteBatchSampler(
@@ -52,7 +61,10 @@ def main_pt():
         densify_norm=args.densify_norm, sbn=args.sbn,
     ).to(args.device)
     print(f'[PT model] model = {model_without_ddp}\n')
-    model: DistributedDataParallel = DistributedDataParallel(model_without_ddp, device_ids=[dist.get_local_rank()], find_unused_parameters=False, broadcast_buffers=False)
+    if dist.initialized() > 1:
+        model: DistributedDataParallel = DistributedDataParallel(model_without_ddp, device_ids=[dist.get_local_rank()], find_unused_parameters=False, broadcast_buffers=False)
+    else:
+        model = LocalDDP(model_without_ddp)
     
     # build optimizer and lr_scheduler
     param_groups: List[dict] = get_param_groups(model_without_ddp, nowd_keys={'cls_token', 'pos_embed', 'mask_token', 'gamma'})

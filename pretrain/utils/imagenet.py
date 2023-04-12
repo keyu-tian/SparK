@@ -11,6 +11,7 @@ import PIL.Image as PImage
 from timm.data import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 from torchvision.datasets.folder import DatasetFolder, IMG_EXTENSIONS
 from torchvision.transforms import transforms
+from torch.utils.data import Dataset
 
 try:
     from torchvision.transforms import InterpolationMode
@@ -50,7 +51,13 @@ class ImageNetDataset(DatasetFolder):
         return self.transform(self.loader(path)), target
 
 
-def build_imagenet_pretrain(imagenet_folder, input_size):
+def build_dataset_to_pretrain(dataset_path, input_size) -> Dataset:
+    """
+    You may need to modify this function to fit your own dataset.
+    :param dataset_path: the folder of dataset
+    :param input_size: the input size (image resolution)
+    :return: the dataset used for pretraining
+    """
     trans_train = transforms.Compose([
         transforms.RandomResizedCrop(input_size, scale=(0.67, 1.0), interpolation=interpolation),
         transforms.RandomHorizontalFlip(),
@@ -58,12 +65,12 @@ def build_imagenet_pretrain(imagenet_folder, input_size):
         transforms.Normalize(mean=IMAGENET_DEFAULT_MEAN, std=IMAGENET_DEFAULT_STD),
     ])
     
-    imagenet_folder = os.path.abspath(imagenet_folder)
+    dataset_path = os.path.abspath(dataset_path)
     for postfix in ('train', 'val'):
-        if imagenet_folder.endswith(postfix):
-            imagenet_folder = imagenet_folder[:-len(postfix)]
+        if dataset_path.endswith(postfix):
+            dataset_path = dataset_path[:-len(postfix)]
     
-    dataset_train = ImageNetDataset(imagenet_folder=imagenet_folder, transform=trans_train, train=True)
+    dataset_train = ImageNetDataset(imagenet_folder=dataset_path, transform=trans_train, train=True)
     print_transform(trans_train, '[pre-train]')
     return dataset_train
 

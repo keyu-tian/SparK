@@ -22,19 +22,24 @@ def initialized():
 
 
 def initialize(backend='nccl'):
+    global __device
     if not torch.cuda.is_available():
         print(f'[dist initialize] cuda is not available, use cpu instead', file=sys.stderr)
+        return
+    elif 'RANK' not in os.environ:
+        __device = torch.empty(1).cuda().device
+        print(f'[dist initialize] RANK is not set, use 1 GPU instead', file=sys.stderr)
         return
     
     # ref: https://github.com/open-mmlab/mmcv/blob/master/mmcv/runner/dist_utils.py#L29
     if mp.get_start_method(allow_none=True) is None:
         mp.set_start_method('spawn')
-    global_rank, num_gpus = int(os.environ.get('RANK', 'error')), torch.cuda.device_count()
+    global_rank, num_gpus = int(os.environ['RANK']), torch.cuda.device_count()
     local_rank = global_rank % num_gpus
     torch.cuda.set_device(local_rank)
     tdist.init_process_group(backend=backend)
     
-    global __rank, __local_rank, __world_size, __device, __initialized
+    global __rank, __local_rank, __world_size, __initialized
     __local_rank = local_rank
     __rank, __world_size = tdist.get_rank(), tdist.get_world_size()
     __device = torch.empty(1).cuda().device
@@ -81,28 +86,33 @@ def parallelize(net, syncbn=False):
 
 
 def allreduce(t: torch.Tensor) -> None:
-    if not t.is_cuda:
-        cu = t.detach().cuda()
-        tdist.all_reduce(cu)
-        t.copy_(cu.cpu())
-    else:
-        tdist.all_reduce(t)
+    if __initialized:
+        if not t.is_cuda:
+            cu = t.detach().cuda()
+            tdist.all_reduce(cu)
+            t.copy_(cu.cpu())
+        else:
+            tdist.all_reduce(t)
 
 
 def allgather(t: torch.Tensor, cat=True) -> Union[List[torch.Tensor], torch.Tensor]:
-    if not t.is_cuda:
-        t = t.cuda()
-    ls = [torch.empty_like(t) for _ in range(__world_size)]
-    tdist.all_gather(ls, t)
+    if __initialized:
+        if not t.is_cuda:
+            t = t.cuda()
+        ls = [torch.empty_like(t) for _ in range(__world_size)]
+        tdist.all_gather(ls, t)
+    else:
+        ls = [t]
     if cat:
         ls = torch.cat(ls, dim=0)
     return ls
 
 
 def broadcast(t: torch.Tensor, src_rank) -> None:
-    if not t.is_cuda:
-        cu = t.detach().cuda()
-        tdist.broadcast(cu, src=src_rank)
-        t.copy_(cu.cpu())
-    else:
-        tdist.broadcast(t, src=src_rank)
+    if __initialized:
+        if not t.is_cuda:
+            cu = t.detach().cuda()
+            tdist.broadcast(cu, src=src_rank)
+            t.copy_(cu.cpu())
+        else:
+            tdist.broadcast(t, src=src_rank)
