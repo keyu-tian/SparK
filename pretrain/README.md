@@ -43,7 +43,7 @@ We use the **same** pretraining configurations (lr, batch size, etc.) for all mo
 Their names and **default values** can be found in [/pretrain/utils/arg_util.py line23-44](/pretrain/utils/arg_util.py#L23-L44).
 These default configurations (like batch size 4096) would be used, unless you specify some like `--bs=512`.
 
-**Note: the batch size `--bs` is the total batch size of all GPU, and the learning rate `--lr` is the base learning rate. The actual learning rate would be `lr * bs / 256`, as in [/pretrain/utils/arg_util.py line131](/pretrain/utils/arg_util.py#L131).**
+**Note: the batch size `--bs` is the total batch size of all GPU, and the learning rate `--base_lr` is the base learning rate. The actual learning rate would be `lr * bs / 256`, as in [/pretrain/utils/arg_util.py line131](/pretrain/utils/arg_util.py#L131). Don't use `--lr` to specify a lr (would be ignored)**
 
 Here is an example command pretraining a ResNet50 on single machine with 8 GPUs (we use DistributedDataParallel):
 ```shell script
