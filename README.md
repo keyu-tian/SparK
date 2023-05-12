@@ -150,13 +150,21 @@ We also provide [pretrain/viz_spconv.ipynb](pretrain/viz_spconv.ipynb) that show
 We highly recommended you to use `torch==1.10.0`, `torchvision==0.11.1`, and `timm==0.5.4` for reproduction.
 Check [INSTALL.md](INSTALL.md) to install all pip dependencies.
 
+- **Loading pretrained model weights in 3 lines**
+```python3
+# download our weights `resnet50_1kpretrained_timm_style.pth` first
+import torch, timm
+res50 = timm.create_model('resnet50')
+res50.load_state_dict(torch.load('resnet50_1kpretrained_timm_style.pth', 'cpu'), strict=False)
+```
+  
 - **Pretraining**
-  - all ResNets and ConvNeXts on ImageNet-1k: &nbsp;see [pretrain/](pretrain)
-  - **your own CNN models**: &nbsp;see [pretrain/](pretrain), especially [pretrain/models/custom.py](pretrain/models/custom.py)
+  - any ResNet or ConvNeXt on ImageNet-1k: &nbsp;see [pretrain/](pretrain)
+  - **your own CNN model**: &nbsp;see [pretrain/](pretrain), especially [pretrain/models/custom.py](pretrain/models/custom.py)
 
 
 - **Finetuning**
-  - all models on ImageNet: &nbsp;check [downstream_imagenet/](downstream_imagenet) for subsequent instructions.
+  - any ResNet or ConvNeXt on ImageNet-1k: &nbsp;check [downstream_imagenet/](downstream_imagenet) for subsequent instructions.
   - ResNets on COCO: &nbsp;see [downstream_d2/](downstream_d2)
   - ConvNeXts on COCO: &nbsp;see [downstream_mmdet/](downstream_mmdet)
 
