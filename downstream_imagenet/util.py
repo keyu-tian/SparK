@@ -15,7 +15,6 @@ import torch
 import torch.distributed as tdist
 import torch.multiprocessing as tmp
 from timm import create_model
-from timm.data import Mixup
 from timm.loss import SoftTargetCrossEntropy, BinaryCrossEntropy
 from timm.optim import AdamW, Lamb
 from timm.utils import ModelEmaV2
@@ -23,6 +22,7 @@ from torch.nn.parallel import DistributedDataParallel
 from torch.optim.optimizer import Optimizer
 
 from arg import FineTuneArgs
+from downstream_imagenet.mixup import BatchMixup
 from lr_decay import get_param_groups
 
 
@@ -78,7 +78,7 @@ def create_model_opt(args: FineTuneArgs) -> Tuple[torch.nn.Module, Callable, tor
     # param_groups[0] is like this: {'params': List[nn.Parameters], 'lr': float, 'lr_scale': float, 'weight_decay': float, 'weight_decay_scale': float}
     optimizer = opt_cls[args.opt](param_groups, lr=args.lr, weight_decay=0)
     print(f'[optimizer={type(optimizer)}]')
-    mixup_fn = Mixup(
+    mixup_fn = BatchMixup(
         mixup_alpha=args.mixup, cutmix_alpha=1.0, cutmix_minmax=None,
         prob=1.0, switch_prob=0.5, mode='batch',
         label_smoothing=0.1, num_classes=num_classes
