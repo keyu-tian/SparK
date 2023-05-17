@@ -126,7 +126,7 @@ def fine_tune_one_epoch(ep, args: FineTuneArgs, tb_lg: SummaryWriter, loader_tra
         inp = inp.to(args.device, non_blocking=True)
         raw_tar = tar = tar.to(args.device, non_blocking=True)
         if mixup_fn is not None:
-            inp, tar = mixup_fn(inp, tar)
+            inp, tar, raw_tar = mixup_fn(inp, tar)
         oup = model(inp)
         pred = oup.data.argmax(dim=1)
         if mixup_fn is None:
