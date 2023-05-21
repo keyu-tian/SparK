@@ -37,7 +37,7 @@ python3 main.py --exp_name=debug --data_path=/path/to/imagenet --model=resnet50 
 ## Pretraining Any Model on ImageNet-1k (224x224)
 
 For pretraining, run [/pretrain/main.py](/pretrain/main.py) with `torchrun`.
-**It is required to specify** the ImageNet data folder (`--data_path`), your experiment name & log dir (`--exp_name` and `--exp_dir`, automatically created if not exists), and the model name (`--model`, valid choices see the keys of 'pretrain_default_model_kwargs' in [/pretrain/models/__init__.py line34](/pretrain/models/__init__.py#L34)).
+**It is required to specify** the ImageNet data folder (`--data_path`), your experiment name & log dir (`--exp_name` and `--exp_dir`, automatically created if not exists), and the model name (`--model`, valid choices see the keys of 'pretrain_default_model_kwargs' in [/pretrain/models/\_\_init\_\_.py line34](/pretrain/models/__init__.py#L34)).
 
 We use the **same** pretraining configurations (lr, batch size, etc.) for all models (ResNets and ConvNeXts) in 224 pretraining.
 Their **names** and **default values** are in [/pretrain/utils/arg_util.py line23-44](/pretrain/utils/arg_util.py#L23-L44).
@@ -82,6 +82,7 @@ See files under `--exp_dir` to track your experiment:
     
     It also reports the loss and remaining pretraining time at each epoch.
 
+- `tensorboard_log/`: saves a lot of tensorboard logs, you can visualize loss values, learning rates, gradient norms and more things via `tensorboard --logdir /path/to/this/tensorboard_log/ --port 23333`.
 - `stdout_backup.txt` and `stderr_backup.txt`: will save all output to stdout/stderr
 
 

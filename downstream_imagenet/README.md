@@ -47,6 +47,7 @@ See files under `--exp_dir` to track your experiment:
     
     It also reports training loss/acc, best evaluation acc, and remaining time at each epoch.
 
+- `tensorboard_log/`: saves a lot of tensorboard logs, you can visualize accuracies, loss values, learning rates, gradient norms and more things via `tensorboard --logdir /path/to/this/tensorboard_log/ --port 23333`.
 
 ## Resuming
 

@@ -26,9 +26,10 @@ https://user-images.githubusercontent.com/39692511/226858919-dd4ccf7e-a5ba-4a33-
 ## 🔥 News
 
 - Welcome to our ICLR poster! (https://iclr.cc/virtual/2023/poster/12227).
+- On **May. 11th** another livestream on OpenMMLab & ReadPaper (bilibili)! [[`📹Recorded Video`](https://www.bilibili.com/video/BV11s4y1M7qL/)]
 - A brief introduction (in English) is available on [SlidesAlive](https://recorder-v3.slideslive.com/?share=81463&s=e4098919-55dc-431e-83dd-e1979e5c0faa) now!
-- On **Apr. 27th (UTC+8 8pm)** another livestream would be held at [OpenMMLab (Bilibili)](https://space.bilibili.com/1293512903)!
-- On **Mar. 22nd (UTC+8 8pm)** another livestream would be held at 极市平台 (Bilibili)! [[`📹Recorded Video`](https://www.bilibili.com/video/BV1Da4y1T7mr/)]
+- On **Apr. 27th (UTC+8 8pm)** another livestream would be held at [OpenMMLab (bilibili)](https://space.bilibili.com/1293512903)!
+- On **Mar. 22nd (UTC+8 8pm)** another livestream would be held at 极市平台 (bilibili)! [[`📹Recorded Video`](https://www.bilibili.com/video/BV1Da4y1T7mr/)]
 - The share on [TechBeat (将门创投)](https://www.techbeat.net/talk-info?id=758) is scheduled on **Mar. 16th (UTC+8 8pm)** too! [[`📹Recorded Video`](https://www.techbeat.net/talk-info?id=758)]
 - We are honored to be invited by Synced ("机器之心机动组 视频号" on WeChat) to give a talk about SparK on **Feb. 27th (UTC+0 11am, UTC+8 7pm)**, welcome! [[`📹Recorded Video`](https://www.bilibili.com/video/BV1J54y1u7U3/)]
 - This work got accepted to ICLR 2023 as a Spotlight (notable-top-25%).
@@ -157,7 +158,7 @@ import torch, timm
 res50 = timm.create_model('resnet50')
 res50.load_state_dict(torch.load('resnet50_1kpretrained_timm_style.pth', 'cpu'), strict=False)
 ```
-  
+
 - **Pretraining**
   - any ResNet or ConvNeXt on ImageNet-1k: &nbsp;see [pretrain/](pretrain)
   - **your own CNN model**: &nbsp;see [pretrain/](pretrain), especially [pretrain/models/custom.py](pretrain/models/custom.py)
