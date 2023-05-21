@@ -21,7 +21,7 @@ Then you can use `--model=your_convnet` in the pretraining script.
 ## Tutorial for pretraining your own dataset
 
 Replace the function `build_dataset_to_pretrain` in [line54-75 of /pretrain/utils/imagenet.py](/pretrain/utils/imagenet.py#L54-L75) to yours.
-This function should return a `Dataset` object. You may use args like `args.data_path` and `args.input_size` to help build your dataset. And when runing experiment with `main.sh` you can use `--data_path=... --input_size=...` to specify them.
+This function should return a `Dataset` object. You may use args like `args.data_path` and `args.input_size` to help build your dataset. And when running experiment you can use `--data_path=... --input_size=...` to specify them.
 Note the batch size `--bs` is the total batch size of all GPU, which may also need to be tuned.
 
 
@@ -36,48 +36,43 @@ python3 main.py --exp_name=debug --data_path=/path/to/imagenet --model=resnet50 
 
 ## Pretraining Any Model on ImageNet-1k (224x224)
 
-For pretraining, run [/pretrain/main.sh](/pretrain/main.sh) with bash.
-It is **required** to specify the ImageNet data folder (`--data_path`), the model name (`--model`), and your experiment name (the first argument of `main.sh`) when running the script.
+For pretraining, run [/pretrain/main.py](/pretrain/main.py) with `torchrun`.
+**It is required to specify** the ImageNet data folder (`--data_path`), your experiment name & log dir (`--exp_name` and `--exp_dir`, automatically created if not exists), and the model name (`--model`, valid choices see the keys of 'pretrain_default_model_kwargs' in [/pretrain/models/__init__.py line34](/pretrain/models/__init__.py#L34)).
 
-We use the **same** pretraining configurations (lr, batch size, etc.) for all models (ResNets and ConvNeXts).
-Their names and **default values** can be found in [/pretrain/utils/arg_util.py line23-44](/pretrain/utils/arg_util.py#L23-L44).
-These default configurations (like batch size 4096) would be used, unless you specify some like `--bs=512`.
+We use the **same** pretraining configurations (lr, batch size, etc.) for all models (ResNets and ConvNeXts) in 224 pretraining.
+Their **names** and **default values** are in [/pretrain/utils/arg_util.py line23-44](/pretrain/utils/arg_util.py#L23-L44).
+All these default configurations (like batch size 4096) would be used, unless you specify some like `--bs=512`.
 
-**Note: the batch size `--bs` is the total batch size of all GPU, and the learning rate `--base_lr` is the base learning rate. The actual learning rate would be `lr * bs / 256`, as in [/pretrain/utils/arg_util.py line131](/pretrain/utils/arg_util.py#L131). Don't use `--lr` to specify a lr (would be ignored)**
+**Note: the batch size `--bs` is the total batch size of all GPU, and the learning rate `--base_lr` is the base lr. The actual lr would be `base_lr * bs / 256`, as in [/pretrain/utils/arg_util.py line131](/pretrain/utils/arg_util.py#L131). So don't use `--lr` to specify a lr (will be ignored)**
 
-Here is an example command pretraining a ResNet50 on single machine with 8 GPUs (we use DistributedDataParallel):
+Here is an example to pretrain a ResNet50 on an 8-GPU single machine (we use DistributedDataParallel), overwriting the default batch size to 512:
 ```shell script
 $ cd /path/to/SparK/pretrain
-$ bash ./main.sh <experiment_name> \
-  --num_nodes=1 --ngpu_per_node=8 \
-  --data_path=/path/to/imagenet \
+$ torchrun --nproc_per_node=8 --nnodes=1 --node_rank=0 --master_addr=localhost --master_port=<some_port> main.py \
+  --data_path=/path/to/imagenet --exp_name=<your_exp_name> --exp_dir=/path/to/logdir \
   --model=resnet50 --bs=512
 ```
 
-For multiple machines, change the `--num_nodes` to your count, and plus these args:
+For multiple machines, change the `--nnodes` and `--master_addr` to your configurations. E.g.:
 ```shell script
---node_rank=<rank_starts_from_0> --master_address=<some_address> --master_port=<some_port>
+$ torchrun --nproc_per_node=8 --nnodes=<your_nnodes> --node_rank=<rank_starts_from_0> --master_address=<some_address> --master_port=<some_port> main.py \
+  ...
 ```
-
-Note the `<experiment_name>` is the name of your experiment, which would be used to create an output directory named `output_<experiment_name>`.
-
 
 ## Pretraining ConvNeXt-Large on ImageNet-1k (384x384)
 
-For pretraining with resolution 384, we use a larger mask ratio (0.75), a smaller batch size (2048), and a larger learning rate (4e-4):
+For 384 pretraining we use a larger mask ratio (0.75), a half batch size (2048), and a double base learning rate (4e-4):
 
 ```shell script
 $ cd /path/to/SparK/pretrain
-$ bash ./main.sh <experiment_name> \
---num_nodes=8 --ngpu_per_node=8 --node_rank=... --master_address=... --master_port=... \
---data_path=/path/to/imagenet \
---model=convnext_large --input_size=384 --mask=0.75 \
- --bs=2048 --base_lr=4e-4
+$ torchrun --nproc_per_node=8 --nnodes=<your_nnodes> --node_rank=<rank_starts_from_0> --master_address=<some_address> --master_port=<some_port> main.py \
+  --data_path=/path/to/imagenet --exp_name=<your_exp_name> --exp_dir=/path/to/logdir \
+  --model=convnext_large --input_size=384 --mask=0.75 --bs=2048 --base_lr=4e-4
 ```
 
 ## Logging
 
-Once an experiment starts running, the following files would be automatically created and updated in `output_<experiment_name>`:
+See files under `--exp_dir` to track your experiment:
 
 - `<model>_still_pretraining.pth`: saves model and optimizer states, current epoch, current reconstruction loss, etc; can be used to resume pretraining
 - `<model>_1kpretrained.pth`: can be used for downstream finetuning
@@ -89,17 +84,15 @@ Once an experiment starts running, the following files would be automatically cr
 
 - `stdout_backup.txt` and `stderr_backup.txt`: will save all output to stdout/stderr
 
-These files can help trace the experiment well.
-
 
 ## Resuming
 
-Add `--resume_from=path/to/<model>still_pretraining.pth` to resume from a saved checkpoint.
+Add the arg `--resume_from=path/to/<model>_still_pretraining.pth` to resume pretraining.
 
 
 ## Regarding sparse convolution
 
-We do not use sparse convolutions in this pytorch implementation, due to their limited optimization on modern hardwares.
+We do not use sparse convolutions in this pytorch implementation, due to their limited optimization on modern hardware.
 As can be found in [/pretrain/encoder.py](/pretrain/encoder.py), we use masked dense convolution to simulate submanifold sparse convolution.
 We also define some sparse pooling or normalization layers in [/pretrain/encoder.py](/pretrain/encoder.py).
 All these "sparse" layers are implemented through pytorch built-in operators.
@@ -111,7 +104,7 @@ In SparK, the mask patch size **equals to** the downsample ratio of the CNN mode
 
 Here is the reason: when we do mask, we:
 
-1. first generate the binary mask for the **smallest** resolution feature map, i.e., generate the `_cur_active` or `active_b1ff` in [/pretrain/spark.py line86-87](/pretrain/spark.py#L86-L87), which is a `torch.BoolTensor` shaped as `[B, 1, fmap_size, fmap_size]`, and would be used to mask the smallest feature map.
+1. first generate the binary mask for the **smallest** resolution feature map, i.e., generate the `_cur_active` or `active_b1ff` in [/pretrain/spark.py line86-87](/pretrain/spark.py#L86-L87), which is a `torch.BoolTensor` shaped as `[B, 1, fmap_h, fmap_w]`, and would be used to mask the smallest feature map.
 3. then progressively upsample it (i.e., expand its 2nd and 3rd dimensions by calling `repeat_interleave(..., 2)` and `repeat_interleave(..., 3)` in [/pretrain/encoder.py line16](/pretrain/encoder.py#L16)), to mask those feature maps ([`x` in line21](/pretrain/encoder.py#L21)) with larger resolutions .
 
 So if you want a patch size of 16 or 8, you should actually define a new CNN model with a downsample ratio of 16 or 8.

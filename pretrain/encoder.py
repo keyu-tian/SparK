@@ -11,20 +11,20 @@ from timm.models.layers import DropPath
 
 _cur_active: torch.Tensor = None            # B1ff
 # todo: try to use `gather` for speed?
-def _get_active_ex_or_ii(H, returning_active_ex=True):
-    downsample_raito = H // _cur_active.shape[-1]
-    active_ex = _cur_active.repeat_interleave(downsample_raito, 2).repeat_interleave(downsample_raito, 3)
+def _get_active_ex_or_ii(H, W, returning_active_ex=True):
+    h_repeat, w_repeat = H // _cur_active.shape[-2], W // _cur_active.shape[-1]
+    active_ex = _cur_active.repeat_interleave(h_repeat, dim=2).repeat_interleave(w_repeat, dim=3)
     return active_ex if returning_active_ex else active_ex.squeeze(1).nonzero(as_tuple=True)  # ii: bi, hi, wi
 
 
 def sp_conv_forward(self, x: torch.Tensor):
     x = super(type(self), self).forward(x)
-    x *= _get_active_ex_or_ii(H=x.shape[2], returning_active_ex=True)    # (BCHW) *= (B1HW), mask the output of conv
+    x *= _get_active_ex_or_ii(H=x.shape[2], W=x.shape[3], returning_active_ex=True)    # (BCHW) *= (B1HW), mask the output of conv
     return x
 
 
 def sp_bn_forward(self, x: torch.Tensor):
-    ii = _get_active_ex_or_ii(H=x.shape[2], returning_active_ex=False)
+    ii = _get_active_ex_or_ii(H=x.shape[2], W=x.shape[3], returning_active_ex=False)
     
     bhwc = x.permute(0, 2, 3, 1)
     nc = bhwc[ii]                               # select the features on non-masked positions to form a flatten feature `nc`
@@ -74,7 +74,7 @@ class SparseConvNeXtLayerNorm(nn.LayerNorm):
         if x.ndim == 4: # BHWC or BCHW
             if self.data_format == "channels_last": # BHWC
                 if self.sparse:
-                    ii = _get_active_ex_or_ii(H=x.shape[1], returning_active_ex=False)
+                    ii = _get_active_ex_or_ii(H=x.shape[1], W=x.shape[2], returning_active_ex=False)
                     nc = x[ii]
                     nc = super(SparseConvNeXtLayerNorm, self).forward(nc)
     
@@ -85,7 +85,7 @@ class SparseConvNeXtLayerNorm(nn.LayerNorm):
                     return super(SparseConvNeXtLayerNorm, self).forward(x)
             else:       # channels_first, BCHW
                 if self.sparse:
-                    ii = _get_active_ex_or_ii(H=x.shape[2], returning_active_ex=False)
+                    ii = _get_active_ex_or_ii(H=x.shape[2], W=x.shape[3], returning_active_ex=False)
                     bhwc = x.permute(0, 2, 3, 1)
                     nc = bhwc[ii]
                     nc = super(SparseConvNeXtLayerNorm, self).forward(nc)
@@ -146,7 +146,7 @@ class SparseConvNeXtBlock(nn.Module):
         x = x.permute(0, 3, 1, 2)  # (N, H, W, C) -> (N, C, H, W)
         
         if self.sparse:
-            x *= _get_active_ex_or_ii(H=x.shape[2], returning_active_ex=True)
+            x *= _get_active_ex_or_ii(H=x.shape[2], W=x.shape[3], returning_active_ex=True)
         
         x = input + self.drop_path(x)
         return x

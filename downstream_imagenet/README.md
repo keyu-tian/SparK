@@ -12,32 +12,31 @@ See [INSTALL.md](https://github.com/keyu-tian/SparK/blob/main/INSTALL.md) to pre
 
 ## Fine-tuning on ImageNet-1k from pre-trained weights
 
-Run [downstream_imagenet/main.sh](https://github.com/keyu-tian/SparK/blob/main/downstream_imagenet/main.sh).
-It is **required** to specify your experiment_name `<experiment_name>` ImageNet data folder `--data_path`, model name `--model`, and checkpoint file path `--resume_from` to run fine-tuning.
-All the other configurations have their default values, listed in [downstream_imagenet/arg.py#L13](https://github.com/keyu-tian/SparK/blob/main/downstream_imagenet/arg.py#L13).
-You can override any defaults by passing key-word arguments (like `--bs=2048`) to `main.sh`.
+Run [/downstream_imagenet/main.py](/downstream_imagenet/main.py) via `torchrun`.
+**It is required to specify** the ImageNet data folder (`--data_path`), your experiment name & log dir (`--exp_name` and `--exp_dir`, automatically created if not exists), the model name (`--model`, valid choices see the keys of 'HP_DEFAULT_VALUES' in [/downstream_imagenet/arg.py line14](/downstream_imagenet/arg.py#L14)), and the pretrained weight file `--resume_from` to run fine-tuning.
+
+All the other configurations have their default values, listed in [/downstream_imagenet/arg.py#L13](/downstream_imagenet/arg.py#L13).
+You can overwrite any defaults by `--bs=1024` or something like that.
 
 
-Here is an example command fine-tuning a ResNet50 on single machine with 8 GPUs:
+Here is an example to pretrain a ResNet50 on an 8-GPU single machine:
 ```shell script
 $ cd /path/to/SparK/downstream_imagenet
-$ bash ./main.sh <experiment_name> \
-  --num_nodes=1 --ngpu_per_node=8 \
-  --data_path=/path/to/imagenet \
+$ torchrun --nproc_per_node=8 --nnodes=1 --node_rank=0 --master_addr=localhost --master_port=<some_port> main.py \
+  --data_path=/path/to/imagenet --exp_name=<your_exp_name> --exp_dir=/path/to/logdir \
   --model=resnet50 --resume_from=/some/path/to/timm_resnet50_1kpretrained.pth
 ```
 
-For multiple machines, change the `num_nodes` to your count and plus these args:
+For multiple machines, change the `--nnodes` and `--master_addr` to your configurations. E.g.:
 ```shell script
---node_rank=<rank_starts_from_0> --master_address=<some_address> --master_port=<some_port>
+$ torchrun --nproc_per_node=8 --nnodes=<your_nnodes> --node_rank=<rank_starts_from_0> --master_address=<some_address> --master_port=<some_port> main.py \
+  ...
 ```
-
-Note that the first argument `<experiment_name>` is the name of your experiment, which would be used to create an output directory named `output_<experiment_name>`.
 
 
 ## Logging
 
-Once an experiment starts running, the following files would be automatically created and updated in `output_<experiment_name>`:
+See files under `--exp_dir` to track your experiment:
 
 - `<model>_1kfinetuned_last.pth`: the latest model weights
 - `<model>_1kfinetuned_best.pth`: model weights with the highest acc
@@ -48,9 +47,7 @@ Once an experiment starts running, the following files would be automatically cr
     
     It also reports training loss/acc, best evaluation acc, and remaining time at each epoch.
 
-These files can help trace the experiment well.
-
 
 ## Resuming
 
-Add `--resume_from=path/to/<model>_1kfinetuned_last.pth` to resume from a latest saved checkpoint.
+Use `--resume_from` again, like `--resume_from=path/to/<model>_1kfinetuned_last.pth`.

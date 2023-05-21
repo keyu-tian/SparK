@@ -25,9 +25,9 @@ class SparK(nn.Module):
         super().__init__()
         input_size, downsample_raito = sparse_encoder.input_size, sparse_encoder.downsample_raito
         self.downsample_raito = downsample_raito
-        self.fmap_size = input_size // downsample_raito
+        self.fmap_h, self.fmap_w = input_size // downsample_raito, input_size // downsample_raito
         self.mask_ratio = mask_ratio
-        self.len_keep = round(self.fmap_size * self.fmap_size * (1 - mask_ratio))
+        self.len_keep = round(self.fmap_h * self.fmap_w * (1 - mask_ratio))
         
         self.sparse_encoder = sparse_encoder
         self.dense_decoder = dense_decoder
@@ -81,10 +81,10 @@ class SparK(nn.Module):
         self.vis_active = self.vis_active_ex = self.vis_inp = self.vis_inp_mask = ...
     
     def mask(self, B: int, device, generator=None):
-        f: int = self.fmap_size
-        idx = torch.rand(B, f * f, generator=generator).argsort(dim=1)
+        h, w = self.fmap_h, self.fmap_w
+        idx = torch.rand(B, h * w, generator=generator).argsort(dim=1)
         idx = idx[:, :self.len_keep].to(device)  # (B, len_keep)
-        return torch.zeros(B, f * f, dtype=torch.bool, device=device).scatter_(dim=1, index=idx, value=True).view(B, 1, f, f)
+        return torch.zeros(B, h * w, dtype=torch.bool, device=device).scatter_(dim=1, index=idx, value=True).view(B, 1, h, w)
     
     def forward(self, inp_bchw: torch.Tensor, active_b1ff=None, vis=False):
         # step1. Mask
@@ -131,7 +131,7 @@ class SparK(nn.Module):
     
     def patchify(self, bchw):
         p = self.downsample_raito
-        h = w = self.fmap_size
+        h, w = self.fmap_h, self.fmap_w
         B, C = bchw.shape[:2]
         bchw = bchw.reshape(shape=(B, C, h, p, w, p))
         bchw = torch.einsum('bchpwq->bhwpqc', bchw)
@@ -140,7 +140,7 @@ class SparK(nn.Module):
     
     def unpatchify(self, bln):
         p = self.downsample_raito
-        h = w = self.fmap_size
+        h, w = self.fmap_h, self.fmap_w
         B, C = bln.shape[0], bln.shape[-1] // p ** 2
         bln = bln.reshape(shape=(B, h, w, p, p, C))
         bln = torch.einsum('bhwpqc->bchpwq', bln)
