@@ -24,6 +24,7 @@ Replace the function `build_dataset_to_pretrain` in [line54-75 of /pretrain/util
 This function should return a `Dataset` object. You may use args like `args.data_path` and `args.input_size` to help build your dataset. And when running experiment you can use `--data_path=... --input_size=...` to specify them.
 Note the batch size `--bs` is the total batch size of all GPU, which may also need to be tuned.
 
+Note that you can specify `--init_weight=/path/to/res50_withdecoder_1kpretrained_spark_style.pth` to do your pretraining from our pretrained weights, rather than form scratch.
 
 ## Debug on 1 GPU (without DistributedDataParallel)
 
@@ -88,7 +89,10 @@ See files under `--exp_dir` to track your experiment:
 
 ## Resuming
 
-Add the arg `--resume_from=path/to/<model>_still_pretraining.pth` to resume pretraining.
+Add the arg `--resume_from=path/to/<model>_still_pretraining.pth` to resume pretraining. Note this is different from `--init_weight`:
+
+- `--resume_from` will load three things: model weights, optimizer states, and current epoch, so it's used to resume your interrupted experiment.
+- `--init_weight` ONLY loads the model weights, so it's just like a model initialization.
 
 
 ## Regarding sparse convolution

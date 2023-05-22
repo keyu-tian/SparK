@@ -18,7 +18,8 @@ class Args(Tap):
     exp_name: str = 'your_exp_name'
     exp_dir: str = 'your_exp_dir'   # will be created if not exists
     data_path: str = 'imagenet_data_path'
-    resume_from: str = ''   # resume from some checkpoint.pth
+    init_weight: str = ''   # use some checkpoint as model weight initialization; ONLY load model weights
+    resume_from: str = ''   # resume the experiment from some checkpoint.pth; load model weights, optimizer states, and last epoch
     
     # SparK hyperparameters
     mask: float = 0.6   # mask ratio, should be in (0, 1)

@@ -166,7 +166,18 @@ def save_checkpoint_for_finetune(save_to, args, sp_cnn_state):
         torch.save(to_save, checkpoint_path)
 
 
-def load_checkpoint(resume_from, model_without_ddp, optimizer):
+def initialize_weight(init_weight: str, model_without_ddp):
+    # use some checkpoint as model weight initialization; ONLY load model weights
+    if len(init_weight):
+        model_state = torch.load(init_weight, 'cpu')
+        if 'module' in model_state: model_state = model_state['module']
+        missing, unexpected = model_without_ddp.load_state_dict(model_state, strict=False)
+        print(f'[initialize_weight] missing_keys={missing}')
+        print(f'[initialize_weight] unexpected_keys={unexpected}')
+
+
+def load_checkpoint(resume_from: str, model_without_ddp, optimizer):
+    # resume the experiment from some checkpoint.pth; load model weights, optimizer states, and last epoch
     if len(resume_from) == 0:
         return 0, '[no performance_desc]'
     print(f'[try to resume from file `{resume_from}`]')

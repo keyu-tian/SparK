@@ -61,6 +61,11 @@ def main_pt():
         densify_norm=args.densify_norm, sbn=args.sbn,
     ).to(args.device)
     print(f'[PT model] model = {model_without_ddp}\n')
+    
+    # the model has been randomly initialized in their construction time
+    # now try to load some checkpoint as model weight initialization; this ONLY loads the model weights
+    misc.initialize_weight(args.init_weight, model_without_ddp)
+    
     if dist.initialized():
         model: DistributedDataParallel = DistributedDataParallel(model_without_ddp, device_ids=[dist.get_local_rank()], find_unused_parameters=False, broadcast_buffers=False)
     else:
@@ -76,7 +81,8 @@ def main_pt():
     optimizer = opt_clz(params=param_groups, lr=args.lr, weight_decay=0.0)
     print(f'[optimizer] optimizer({opt_clz}) ={optimizer}\n')
     
-    # try to resume
+    # try to resume the experiment from some checkpoint.pth; this will load model weights, optimizer states, and last epoch (ep_start)
+    # if loaded, ep_start will be greater than 0
     ep_start, performance_desc = misc.load_checkpoint(args.resume_from, model_without_ddp, optimizer)
     if ep_start >= args.ep: # load from a complete checkpoint file
         print(f'  [*] [PT already done]    Min/Last Recon Loss: {performance_desc}')
