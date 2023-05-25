@@ -19,12 +19,12 @@ All the other configurations have their default values, listed in [/downstream_i
 You can overwrite any defaults by `--bs=1024` or something like that.
 
 
-Here is an example to pretrain a ResNet50 on an 8-GPU single machine:
+Here is an example to pretrain a ConvNeXt-Small on an 8-GPU single machine:
 ```shell script
 $ cd /path/to/SparK/downstream_imagenet
 $ torchrun --nproc_per_node=8 --nnodes=1 --node_rank=0 --master_addr=localhost --master_port=<some_port> main.py \
   --data_path=/path/to/imagenet --exp_name=<your_exp_name> --exp_dir=/path/to/logdir \
-  --model=resnet50 --resume_from=/some/path/to/timm_resnet50_1kpretrained.pth
+  --model=convnext_small --resume_from=/some/path/to/convnextS_1kpretrained_official_style.pth
 ```
 
 For multiple machines, change the `--nnodes` and `--master_addr` to your configurations. E.g.:

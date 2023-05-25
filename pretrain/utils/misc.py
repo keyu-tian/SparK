@@ -145,6 +145,7 @@ def save_checkpoint(save_to, args, epoch, performance_desc, model_without_ddp_st
     if dist.is_local_master():
         to_save = {
             'args': str(args),
+            'input_size': args.input_size,
             'arch': args.model,
             'epoch': epoch,
             'performance_desc': performance_desc,

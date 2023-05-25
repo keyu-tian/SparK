@@ -10,7 +10,6 @@ from typing import List
 import sys
 import torch
 import torch.nn as nn
-from timm.data import IMAGENET_DEFAULT_STD, IMAGENET_DEFAULT_MEAN
 from timm.models.layers import trunc_normal_
 
 import encoder
@@ -73,10 +72,9 @@ class SparK(nn.Module):
         
         print(f'[SparK.__init__] dims of mask_tokens={tuple(p.numel() for p in self.mask_tokens)}')
         
-        m = torch.tensor(IMAGENET_DEFAULT_MEAN).view(1, 3, 1, 1)
-        s = torch.tensor(IMAGENET_DEFAULT_STD).view(1, 3, 1, 1)
-        self.register_buffer('imn_m', m)
-        self.register_buffer('imn_s', s)
+        # these are deprecated and would never be used; can be removed.
+        self.register_buffer('imn_m', torch.empty(1, 3, 1, 1))
+        self.register_buffer('imn_s', torch.empty(1, 3, 1, 1))
         self.register_buffer('norm_black', torch.zeros(1, 3, input_size, input_size))
         self.vis_active = self.vis_active_ex = self.vis_inp = self.vis_inp_mask = ...
     
@@ -125,7 +123,7 @@ class SparK(nn.Module):
             masked_bchw = inp_bchw * active_b1hw
             rec_bchw = self.unpatchify(rec * var + mean)
             rec_or_inp = torch.where(active_b1hw, inp_bchw, rec_bchw)
-            return [self.denorm_for_vis(i) for i in (inp_bchw, masked_bchw, rec_or_inp)]
+            return inp_bchw, masked_bchw, rec_or_inp
         else:
             return recon_loss
     
@@ -186,7 +184,3 @@ class SparK(nn.Module):
                     else:
                         print(err, file=sys.stderr)
         return incompatible_keys
-    
-    def denorm_for_vis(self, normalized_im):
-        normalized_im = (normalized_im * self.imn_s).add_(self.imn_m)
-        return torch.clamp(normalized_im, 0, 1)

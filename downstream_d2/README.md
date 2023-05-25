@@ -61,12 +61,12 @@ Before fine-tuning a ResNet50 pre-trained by SparK, you should first convert our
 
 ```shell script
 $ cd /path/to/SparK/downstream_d2
-$ python3 convert-timm-to-d2.py /some/path/to/timm_resnet50_1kpretrained.pth d2-style.pkl
+$ python3 convert-timm-to-d2.py /some/path/to/resnet50_1kpretrained_timm_style.pth d2-style.pkl
 ```
 
 For a ResNet50, you should see a log reporting `len(state)==318`:
 ```text
-[convert] .pkl is generated! (from `/some/path/to/timm_resnet50_1kpretrained.pth`, to `d2-style.pkl`, len(state)==318)
+[convert] .pkl is generated! (from `/some/path/to/resnet50_1kpretrained_timm_style.pth`, to `d2-style.pkl`, len(state)==318)
 ```
 
 Then run fine-tuning on single machine with 8 gpus:

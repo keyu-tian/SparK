@@ -100,7 +100,7 @@ def load_checkpoint(resume_from, model_without_ddp, ema_module, optimizer):
         # return 0, '[no performance_desc]'
     print(f'[try to resume from file `{resume_from}`]')
     checkpoint = torch.load(resume_from, map_location='cpu')
-    assert checkpoint.get('is_pretrain', False) == False, 'Please do not use `*_still_pretraining.pth`, which is ONLY for resuming the pretraining. Use `*_1kpretrained.pth` or `*_1kfinetuned*.pth` instead.'
+    assert checkpoint.get('is_pretrain', False) == False, 'Please do not use `*_withdecoder_1kpretrained_spark_style.pth`, which is ONLY for resuming the pretraining. Use `*_1kpretrained_timm_style.pth` or `*_1kfinetuned*.pth` instead.'
     
     ep_start, performance_desc = checkpoint.get('epoch', -1) + 1, checkpoint.get('performance_desc', '[no performance_desc]')
     missing, unexpected = model_without_ddp.load_state_dict(checkpoint.get('module', checkpoint), strict=False)

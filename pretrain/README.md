@@ -75,8 +75,8 @@ $ torchrun --nproc_per_node=8 --nnodes=<your_nnodes> --node_rank=<rank_starts_fr
 
 See files under `--exp_dir` to track your experiment:
 
-- `<model>_still_pretraining.pth`: saves model and optimizer states, current epoch, current reconstruction loss, etc; can be used to resume pretraining
-- `<model>_1kpretrained.pth`: can be used for downstream finetuning
+- `<model>_withdecoder_1kpretrained_spark_style.pth`: saves model and optimizer states, current epoch, current reconstruction loss, etc.; can be used to resume pretraining; can also be used for visualization in [/pretrain/viz_reconstruction.ipynb](/pretrain/viz_reconstruction.ipynb)
+- `<model>_1kpretrained_timm_style.pth`: can be used for downstream finetuning
 - `pretrain_log.txt`: records some important information such as:
     - `git_commit_id`: git version
     - `cmd`: all arguments passed to the script
@@ -89,7 +89,7 @@ See files under `--exp_dir` to track your experiment:
 
 ## Resuming
 
-Add the arg `--resume_from=path/to/<model>_still_pretraining.pth` to resume pretraining. Note this is different from `--init_weight`:
+Add the arg `--resume_from=path/to/<model>_withdecoder_1kpretrained_spark_style.pth` to resume pretraining. Note this is different from `--init_weight`:
 
 - `--resume_from` will load three things: model weights, optimizer states, and current epoch, so it's used to resume your interrupted experiment.
 - `--init_weight` ONLY loads the model weights, so it's just like a model initialization.
