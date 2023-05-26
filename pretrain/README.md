@@ -2,7 +2,7 @@
 
 See [/INSTALL.md](/INSTALL.md) to prepare `pip` dependencies and the ImageNet dataset.
 
-**Note: for network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
+**Note: for neural network definitions, we directly use `timm.models.ResNet` and [official ConvNeXt](https://github.com/facebookresearch/ConvNeXt/blob/048efcea897d999aed302f2639b6270aedf8d4c8/models/convnext.py).**
 
 
 ## Tutorial for pretraining your own CNN model
@@ -20,11 +20,11 @@ Then you can use `--model=your_convnet` in the pretraining script.
 
 ## Tutorial for pretraining your own dataset
 
-Replace the function `build_dataset_to_pretrain` in [line54-75 of /pretrain/utils/imagenet.py](/pretrain/utils/imagenet.py#L54-L75) to yours.
-This function should return a `Dataset` object. You may use args like `args.data_path` and `args.input_size` to help build your dataset. And when running experiment you can use `--data_path=... --input_size=...` to specify them.
-Note the batch size `--bs` is the total batch size of all GPU, which may also need to be tuned.
+See the comment of function `build_dataset_to_pretrain` in [line55 of /pretrain/utils/imagenet.py](/pretrain/utils/imagenet.py#L55) to yours.
+Define a subclass of `torch.utils.data.Dataset` for your own unlabeled dataset, to replace our `ImageNetDataset`. Use `args.data_path` and `args.input_size` to help build your dataset, with `--data_path=... --input_size=...` to specify them.
+Note the batch size `--bs` is the total batch size of all GPU, which may need to be adjusted based on your dataset size. For instance, we use `--bs=4096` for ImageNet, which contains 1.28 million images.
 
-Note that you can specify `--init_weight=/path/to/res50_withdecoder_1kpretrained_spark_style.pth` to do your pretraining from our pretrained weights, rather than form scratch.
+**If your dataset is relatively small**, you can try `--init_weight=/path/to/res50_withdecoder_1kpretrained_spark_style.pth` to do your pretraining *from our pretrained weights*, rather than *form scratch* (like doing a self-supervised finetuning).
 
 ## Debug on 1 GPU (without DistributedDataParallel)
 
@@ -44,7 +44,7 @@ We use the **same** pretraining configurations (lr, batch size, etc.) for all mo
 Their **names** and **default values** are in [/pretrain/utils/arg_util.py line23-44](/pretrain/utils/arg_util.py#L23-L44).
 All these default configurations (like batch size 4096) would be used, unless you specify some like `--bs=512`.
 
-**Note: the batch size `--bs` is the total batch size of all GPU, and the learning rate `--base_lr` is the base lr. The actual lr would be `base_lr * bs / 256`, as in [/pretrain/utils/arg_util.py line131](/pretrain/utils/arg_util.py#L131). So don't use `--lr` to specify a lr (will be ignored)**
+**Note: the batch size `--bs` is the total batch size of all GPU, and the learning rate `--base_lr` is the base lr. The actual lr is `base_lr * bs / 256`, as in [/pretrain/utils/arg_util.py line131](/pretrain/utils/arg_util.py#L131). So don't use `--lr` to specify a lr (will be ignored)**
 
 Here is an example to pretrain a ResNet50 on an 8-GPU single machine (we use DistributedDataParallel), overwriting the default batch size to 512:
 ```shell script

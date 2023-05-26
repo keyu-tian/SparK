@@ -40,20 +40,25 @@ class ImageNetDataset(DatasetFolder):
             imagenet_folder,
             loader=pil_loader,
             extensions=IMG_EXTENSIONS if is_valid_file is None else None,
-            transform=transform, target_transform=None, is_valid_file=is_valid_file
+            transform=transform,
+            target_transform=None, is_valid_file=is_valid_file
         )
         
-        self.samples = tuple(self.samples)
-        self.targets = tuple([s[1] for s in self.samples])
+        self.samples = tuple(img for (img, label) in self.samples)
+        self.targets = None # this is self-supervised learning so we don't need labels
     
-    def __getitem__(self, index: int) -> Tuple[Any, int]:
-        path, target = self.samples[index]
-        return self.transform(self.loader(path)), target
+    def __getitem__(self, index: int) -> Any:
+        img_file_path = self.samples[index]
+        return self.transform(self.loader(img_file_path))
 
 
 def build_dataset_to_pretrain(dataset_path, input_size) -> Dataset:
     """
-    You may need to modify this function to fit your own dataset.
+    You may need to modify this function to return your own dataset.
+    Define a new class, a subclass of `Dataset`, to replace our ImageNetDataset.
+    Use dataset_path to build your image file path list.
+    Use input_size to create the transformation function for your images, can refer to the `trans_train` blow. 
+    
     :param dataset_path: the folder of dataset
     :param input_size: the input size (image resolution)
     :return: the dataset used for pretraining
