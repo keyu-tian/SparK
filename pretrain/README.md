@@ -20,7 +20,7 @@ Then you can use `--model=your_convnet` in the pretraining script.
 
 ## Tutorial for pretraining your own dataset
 
-See the comment of function `build_dataset_to_pretrain` in [line55 of /pretrain/utils/imagenet.py](/pretrain/utils/imagenet.py#L55) to yours.
+See the comment of function `build_dataset_to_pretrain` in [line55 of /pretrain/utils/imagenet.py](/pretrain/utils/imagenet.py#L55).
 Define a subclass of `torch.utils.data.Dataset` for your own unlabeled dataset, to replace our `ImageNetDataset`. Use `args.data_path` and `args.input_size` to help build your dataset, with `--data_path=... --input_size=...` to specify them.
 Note the batch size `--bs` is the total batch size of all GPU, which may need to be adjusted based on your dataset size. For instance, we use `--bs=4096` for ImageNet, which contains 1.28 million images.
 
