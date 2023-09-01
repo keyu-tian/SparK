@@ -25,9 +25,8 @@ https://user-images.githubusercontent.com/39692511/226858919-dd4ccf7e-a5ba-4a33-
 
 ## 🔥 News
 
-- Welcome to our ICLR poster! (https://iclr.cc/virtual/2023/poster/12227).
+- A brief introduction (in English) is available on our ICLR poster page! [[`📹Recorded Video, Poster, and Slides`](https://iclr.cc/virtual/2023/poster/12227)].
 - On **May. 11th** another livestream on OpenMMLab & ReadPaper (bilibili)! [[`📹Recorded Video`](https://www.bilibili.com/video/BV11s4y1M7qL/)]
-- A brief introduction (in English) is available on [SlidesAlive](https://recorder-v3.slideslive.com/?share=81463&s=e4098919-55dc-431e-83dd-e1979e5c0faa) now!
 - On **Apr. 27th (UTC+8 8pm)** another livestream would be held at [OpenMMLab (bilibili)](https://space.bilibili.com/1293512903)!
 - On **Mar. 22nd (UTC+8 8pm)** another livestream would be held at 极市平台 (bilibili)! [[`📹Recorded Video`](https://www.bilibili.com/video/BV1Da4y1T7mr/)]
 - The share on [TechBeat (将门创投)](https://www.techbeat.net/talk-info?id=758) is scheduled on **Mar. 16th (UTC+8 8pm)** too! [[`📹Recorded Video`](https://www.techbeat.net/talk-info?id=758)]
