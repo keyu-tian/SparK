@@ -7,24 +7,26 @@ See [/INSTALL.md](/INSTALL.md) to prepare `pip` dependencies and the ImageNet da
 
 ## Tutorial for pretraining your own CNN model
 
-See [/pretrain/models/custom.py](/pretrain/models/custom.py). The things needed to do is:
+See [/pretrain/models/custom.py](/pretrain/models/custom.py). Your todo list is:
 
-- implementing member function `get_downsample_ratio` in [/pretrain/models/custom.py line20](/pretrain/models/custom.py#L20).
-- implementing member function `get_feature_map_channels` in [/pretrain/models/custom.py line29](/pretrain/models/custom.py#L29).
-- implementing member function `forward` in [/pretrain/models/custom.py line38](/pretrain/models/custom.py#L38).
+- implement `get_downsample_ratio` in [/pretrain/models/custom.py line20](/pretrain/models/custom.py#L20).
+- implement `get_feature_map_channels` in [/pretrain/models/custom.py line29](/pretrain/models/custom.py#L29).
+- implement `forward` in [/pretrain/models/custom.py line38](/pretrain/models/custom.py#L38).
 - define `your_convnet(...)` with `@register_model` in [/pretrain/models/custom.py line54](/pretrain/models/custom.py#L53-L54).
 - add default kwargs of `your_convnet(...)` in [/pretrain/models/\_\_init\_\_.py line34](/pretrain/models/__init__.py#L34).
 
-Then you can use `--model=your_convnet` in the pretraining script.
+Then run the experiment with `--model=your_convnet`.
 
 
-## Tutorial for pretraining your own dataset
+## Tutorial for pretraining on your own dataset
 
-See the comment of function `build_dataset_to_pretrain` in [line55 of /pretrain/utils/imagenet.py](/pretrain/utils/imagenet.py#L55).
-Define a subclass of `torch.utils.data.Dataset` for your own unlabeled dataset, to replace our `ImageNetDataset`. Use `args.data_path` and `args.input_size` to help build your dataset, with `--data_path=... --input_size=...` to specify them.
-Note the batch size `--bs` is the total batch size of all GPU, which may need to be adjusted based on your dataset size. For instance, we use `--bs=4096` for ImageNet, which contains 1.28 million images.
+See the comment of `build_dataset_to_pretrain` in [line55 of /pretrain/utils/imagenet.py](/pretrain/utils/imagenet.py#L55). Your todo list:
 
-**If your dataset is relatively small**, you can try `--init_weight=/path/to/res50_withdecoder_1kpretrained_spark_style.pth` to do your pretraining *from our pretrained weights*, rather than *form scratch* (like doing a self-supervised finetuning).
+- Define a subclass of `torch.utils.data.Dataset` for your own unlabeled dataset, to replace our `ImageNetDataset`.
+- Use `args.data_path` and `args.input_size` to help build your dataset, with `--data_path=... --input_size=...` to specify them.
+- Note the batch size `--bs` is the total batch size of all GPU, which may need to be adjusted based on your dataset size. FYI: we use `--bs=4096` for ImageNet, which contains 1.28 million images.
+
+**If your dataset is relatively small**, you can try `--init_weight=/path/to/res50_withdecoder_1kpretrained_spark_style.pth` to do your pretraining *from our pretrained weights*, rather than *form scratch*.
 
 ## Debug on 1 GPU (without DistributedDataParallel)
 
@@ -44,7 +46,7 @@ We use the **same** pretraining configurations (lr, batch size, etc.) for all mo
 Their **names** and **default values** are in [/pretrain/utils/arg_util.py line23-44](/pretrain/utils/arg_util.py#L23-L44).
 All these default configurations (like batch size 4096) would be used, unless you specify some like `--bs=512`.
 
-**Note: the batch size `--bs` is the total batch size of all GPU, and the learning rate `--base_lr` is the base lr. The actual lr is `base_lr * bs / 256`, as in [/pretrain/utils/arg_util.py line131](/pretrain/utils/arg_util.py#L131). So don't use `--lr` to specify a lr (will be ignored)**
+**Note: the batch size `--bs` is the total batch size of all GPU, and the learning rate `--base_lr` is the base lr. The actual lr would be `lr = base_lr * bs / 256`, as in [/pretrain/utils/arg_util.py line131](/pretrain/utils/arg_util.py#L131). So do not use `--lr` to specify a lr (that will be ignored)**
 
 Here is an example to pretrain a ResNet50 on an 8-GPU single machine (we use DistributedDataParallel), overwriting the default batch size to 512:
 ```shell script
@@ -54,7 +56,7 @@ $ torchrun --nproc_per_node=8 --nnodes=1 --node_rank=0 --master_addr=localhost -
   --model=resnet50 --bs=512
 ```
 
-For multiple machines, change the `--nnodes` and `--master_addr` to your configurations. E.g.:
+For multiple machines, change the `--nnodes`, `--node_rank`, `--master_address` and `--master_port` to your configurations. E.g.:
 ```shell script
 $ torchrun --nproc_per_node=8 --nnodes=<your_nnodes> --node_rank=<rank_starts_from_0> --master_address=<some_address> --master_port=<some_port> main.py \
   ...
@@ -73,26 +75,25 @@ $ torchrun --nproc_per_node=8 --nnodes=<your_nnodes> --node_rank=<rank_starts_fr
 
 ## Logging
 
-See files under `--exp_dir` to track your experiment:
+See files in your `--exp_dir` to track your experiment:
 
 - `<model>_withdecoder_1kpretrained_spark_style.pth`: saves model and optimizer states, current epoch, current reconstruction loss, etc.; can be used to resume pretraining; can also be used for visualization in [/pretrain/viz_reconstruction.ipynb](/pretrain/viz_reconstruction.ipynb)
 - `<model>_1kpretrained_timm_style.pth`: can be used for downstream finetuning
 - `pretrain_log.txt`: records some important information such as:
     - `git_commit_id`: git version
-    - `cmd`: all arguments passed to the script
+    - `cmd`: the command of this experiment
     
-    It also reports the loss and remaining pretraining time at each epoch.
+    It also reports the loss and remaining pretraining time.
 
-- `tensorboard_log/`: saves a lot of tensorboard logs, you can visualize loss values, learning rates, gradient norms and more things via `tensorboard --logdir /path/to/this/tensorboard_log/ --port 23333`.
-- `stdout_backup.txt` and `stderr_backup.txt`: will save all output to stdout/stderr
-
+- `tensorboard_log/`: saves a lot of tensorboard logs including loss values, learning rates, gradient norms and more things. Use `tensorboard --logdir /path/to/this/tensorboard_log/ --port 23333` for viz.
+- `stdout_backup.txt` and `stderr_backup.txt`: backups stdout/stderr.
 
 ## Resuming
 
-Add the arg `--resume_from=path/to/<model>_withdecoder_1kpretrained_spark_style.pth` to resume pretraining. Note this is different from `--init_weight`:
+Specify `--resume_from=path/to/<model>_withdecoder_1kpretrained_spark_style.pth` to resume pretraining. Note this is different from `--init_weight`:
 
-- `--resume_from` will load three things: model weights, optimizer states, and current epoch, so it's used to resume your interrupted experiment.
-- `--init_weight` ONLY loads the model weights, so it's just like a model initialization.
+- `--resume_from` will load three things: model weights, optimizer states, and current epoch, so it is used to resume some interrupted experiment (will start from that 'current epoch').
+- `--init_weight` ONLY loads the model weights, so it's just like a model initialization (will start from epoch 0).
 
 
 ## Regarding sparse convolution
@@ -110,7 +111,7 @@ In SparK, the mask patch size **equals to** the downsample ratio of the CNN mode
 Here is the reason: when we do mask, we:
 
 1. first generate the binary mask for the **smallest** resolution feature map, i.e., generate the `_cur_active` or `active_b1ff` in [/pretrain/spark.py line86-87](/pretrain/spark.py#L86-L87), which is a `torch.BoolTensor` shaped as `[B, 1, fmap_h, fmap_w]`, and would be used to mask the smallest feature map.
-3. then progressively upsample it (i.e., expand its 2nd and 3rd dimensions by calling `repeat_interleave(..., 2)` and `repeat_interleave(..., 3)` in [/pretrain/encoder.py line16](/pretrain/encoder.py#L16)), to mask those feature maps ([`x` in line21](/pretrain/encoder.py#L21)) with larger resolutions .
+3. then progressively upsample it (i.e., expand its 2nd and 3rd dimensions by calling `repeat_interleave(..., dim=2)` and `repeat_interleave(..., dim=3)` in [/pretrain/encoder.py line16](/pretrain/encoder.py#L16)), to mask those feature maps ([`x` in line21](/pretrain/encoder.py#L21)) with larger resolutions .
 
 So if you want a patch size of 16 or 8, you should actually define a new CNN model with a downsample ratio of 16 or 8.
 See [Tutorial for pretraining your own CNN model (above)](https://github.com/keyu-tian/SparK/tree/main/pretrain/#tutorial-for-pretraining-your-own-cnn-model).
