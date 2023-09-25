@@ -140,7 +140,7 @@ class TensorboardLogger(object):
         if self.is_master: self.writer.close()
 
 
-def save_checkpoint(save_to, args, epoch, performance_desc, model_without_ddp_state, optimizer_state):
+def save_checkpoint_with_meta_info_and_opt_state(save_to, args, epoch, performance_desc, model_without_ddp_state, optimizer_state):
     checkpoint_path = os.path.join(args.exp_dir, save_to)
     if dist.is_local_master():
         to_save = {
@@ -156,23 +156,17 @@ def save_checkpoint(save_to, args, epoch, performance_desc, model_without_ddp_st
         torch.save(to_save, checkpoint_path)
 
 
-def save_checkpoint_for_finetune(save_to, args, sp_cnn_state):
+def save_checkpoint_model_weights_only(save_to, args, sp_cnn_state):
     checkpoint_path = os.path.join(args.exp_dir, save_to)
     if dist.is_local_master():
-        to_save = {
-            'arch': args.model,
-            'module': sp_cnn_state,
-            'is_pretrain': False,
-        }
-        torch.save(to_save, checkpoint_path)
+        torch.save(sp_cnn_state, checkpoint_path)
 
 
 def initialize_weight(init_weight: str, model_without_ddp):
     # use some checkpoint as model weight initialization; ONLY load model weights
     if len(init_weight):
-        model_state = torch.load(init_weight, 'cpu')
-        if 'module' in model_state: model_state = model_state['module']
-        missing, unexpected = model_without_ddp.load_state_dict(model_state, strict=False)
+        checkpoint = torch.load(init_weight, 'cpu')
+        missing, unexpected = model_without_ddp.load_state_dict(checkpoint.get('module', checkpoint), strict=False)
         print(f'[initialize_weight] missing_keys={missing}')
         print(f'[initialize_weight] unexpected_keys={unexpected}')
 
@@ -185,7 +179,7 @@ def load_checkpoint(resume_from: str, model_without_ddp, optimizer):
     checkpoint = torch.load(resume_from, map_location='cpu')
     
     ep_start, performance_desc = checkpoint.get('epoch', -1) + 1, checkpoint.get('performance_desc', '[no performance_desc]')
-    missing, unexpected = model_without_ddp.load_state_dict(checkpoint['module'], strict=False)
+    missing, unexpected = model_without_ddp.load_state_dict(checkpoint.get('module', checkpoint), strict=False)
     print(f'[load_checkpoint] missing_keys={missing}')
     print(f'[load_checkpoint] unexpected_keys={unexpected}')
     print(f'[load_checkpoint] ep_start={ep_start}, performance_desc={performance_desc}')

@@ -154,8 +154,8 @@ Check [INSTALL.md](INSTALL.md) to install all pip dependencies.
 ```python3
 # download our weights `resnet50_1kpretrained_timm_style.pth` first
 import torch, timm
-res50 = timm.create_model('resnet50')
-res50.load_state_dict(torch.load('resnet50_1kpretrained_timm_style.pth', 'cpu'), strict=False)
+res50, state = timm.create_model('resnet50'), torch.load('resnet50_1kpretrained_timm_style.pth', 'cpu')
+res50.load_state_dict(state.get('module', state), strict=False)     # just in case the model weights are actually saved in state['module']
 ```
 
 - **Pretraining**
