@@ -1,3 +1,4 @@
+matplotlib
 numpy
 Pillow
 typed-argument-parser

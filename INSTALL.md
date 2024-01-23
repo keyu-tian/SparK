@@ -22,7 +22,7 @@ It is highly recommended to install these versions to ensure a consistent enviro
 
 Prepare the [ImageNet-1k](http://image-net.org/) dataset
 - assume the dataset is in `/path/to/imagenet`
-- check the file path, it should look like this:
+- it should look like this:
 ```
 /path/to/imagenet/:
     train/:
